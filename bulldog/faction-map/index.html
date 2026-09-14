@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Boulder Faction Network</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    color-scheme:light;
+    --ground:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --rule:#e1e0d9; --rule2:#c3c2b7;
+    --plan:#008300; --ob:#2a78d6; --bb:#eda100; --bp:#e87ba4; --land:#0b0b0b;
+    --plan-soft:rgba(0,131,0,.14); --ob-soft:rgba(42,120,214,.14); --bb-soft:rgba(237,161,0,.18); --bp-soft:rgba(232,123,164,.18); --land-soft:rgba(11,11,11,.10);
+    --edge:rgba(11,11,11,.42); --edge-faint:rgba(11,11,11,.10); --focus:#0b0b0b;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --ground:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --rule:#2c2c2a; --rule2:#383835;
+      --plan:#008300; --ob:#3987e5; --bb:#c98500; --bp:#d55181; --land:#ffffff;
+      --plan-soft:rgba(0,131,0,.26); --ob-soft:rgba(57,135,229,.22); --bb-soft:rgba(201,133,0,.24); --bp-soft:rgba(213,81,129,.24); --land-soft:rgba(255,255,255,.12);
+      --edge:rgba(255,255,255,.40); --edge-faint:rgba(255,255,255,.09); --focus:#ffffff;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --ground:#0d0d0d; --surface:#1a1a19; --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781; --rule:#2c2c2a; --rule2:#383835;
+    --plan:#008300; --ob:#3987e5; --bb:#c98500; --bp:#d55181; --land:#ffffff;
+    --plan-soft:rgba(0,131,0,.26); --ob-soft:rgba(57,135,229,.22); --bb-soft:rgba(201,133,0,.24); --bp-soft:rgba(213,81,129,.24); --land-soft:rgba(255,255,255,.12);
+    --edge:rgba(255,255,255,.40); --edge-faint:rgba(255,255,255,.09); --focus:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:"Source Serif 4",Georgia,"Times New Roman",serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:26px 16px 64px}
+  h1,h2,h3,.eyebrow,.chip,.bandlab,th,.pole,.mast{font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif}
+  h1{font-size:42px;line-height:1;font-weight:700;letter-spacing:-.01em;margin:6px 0 10px;text-wrap:balance}
+  h2{font-size:27px;line-height:1.1;font-weight:600;margin:0 0 10px;text-wrap:balance}
+  h3{font-size:20px;line-height:1.15;font-weight:600;margin:0 0 6px}
+  p{margin:0 0 12px;max-width:66ch}
+  .eyebrow{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .mast{font-size:14.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin:0 0 4px}
+  .mast a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule2)}
+  .mast a:hover{border-bottom-color:var(--ink)}
+  .mono{font-family:"IBM Plex Mono",Consolas,Menlo,monospace;font-size:.86em;font-variant-numeric:tabular-nums}
+  .lede{font-size:18.5px}
+  .note{color:var(--ink2);font-size:15px;max-width:66ch}
+  section{padding:24px 0;border-top:1px solid var(--rule)}
+  section:first-of-type{border-top:0;padding-top:6px}
+  .head{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+  .pole{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+  .pole i{width:11px;height:11px;display:inline-block;border-radius:2px}
+  .pole.plan i{background:var(--plan)} .pole.ob i{background:var(--ob)} .pole.bb i{background:var(--bb)} .pole.bp i{background:var(--bp)} .pole.land i{background:var(--land)}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin:10px 0 6px;font-size:14px;color:var(--ink2)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend svg{width:34px;height:14px;overflow:visible}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 8px}
+  .chip{font-size:13.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--rule2);background:var(--surface);color:var(--ink2);border-radius:3px;cursor:pointer;line-height:1}
+  .chip[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  .chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+  .chip.plan[aria-pressed="true"]{border-color:var(--plan);box-shadow:inset 0 0 0 1px var(--plan)}
+  .chip.ob[aria-pressed="true"]{border-color:var(--ob);box-shadow:inset 0 0 0 1px var(--ob)}
+  .chip.bb[aria-pressed="true"]{border-color:var(--bb);box-shadow:inset 0 0 0 1px var(--bb)}
+  .chip.bp[aria-pressed="true"]{border-color:var(--bp);box-shadow:inset 0 0 0 1px var(--bp)}
+  .mapwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--rule);background:var(--surface);border-radius:4px}
+  .mapwrap svg{display:block;min-width:900px;width:100%;height:auto;font-family:"Barlow Condensed","Arial Narrow",Arial,sans-serif}
+  .hint{font-size:13.5px;color:var(--muted);margin:6px 0 0}
+  .bandlab{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;fill:var(--muted)}
+  .bandline{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 5}
+  .nlab{fill:var(--ink);font-size:12.5px;font-weight:600;pointer-events:none}
+  .nsub{fill:var(--ink2);font-size:10.5px;font-weight:500;pointer-events:none}
+  .node{cursor:pointer}
+  .node:focus-visible{outline:none}
+  .node:focus-visible .hit{stroke:var(--focus);stroke-width:2.5}
+  .dim{opacity:.12}
+  .edge{fill:none;stroke:var(--edge);stroke-linecap:round}
+  .edge.hi{stroke-opacity:1}
+  .card{border:1px solid var(--rule);border-left:4px solid var(--ink);background:var(--surface);padding:14px 16px;margin-top:12px;border-radius:4px}
+  .card h3{margin:0 0 2px;font-size:22px}
+  .card .sub{color:var(--ink2);font-size:15px;margin:0 0 8px}
+  .card ul{margin:0;padding-left:0;list-style:none}
+  .card li{padding:6px 0;border-top:1px solid var(--rule);font-size:15px;line-height:1.4;display:grid;grid-template-columns:14px 1fr;gap:8px}
+  .card li:first-child{border-top:0}
+  .card li i{width:10px;height:10px;border-radius:2px;margin-top:6px;background:var(--ink)}
+  .card li i.plan{background:var(--plan)} .card li i.ob{background:var(--ob)} .card li i.bb{background:var(--bb)} .card li i.bp{background:var(--bp)}
+  .card li i.other{background:var(--muted)}
+  .card .src{display:block;font-family:"IBM Plex Mono",Consolas,monospace;font-size:11.5px;color:var(--muted);margin-top:2px}
+  .card .bridge{margin-top:10px;font-size:14.5px;color:var(--ink2)}
+  .card .empty{color:var(--muted);font-size:15px;margin:0}
+  .rank{list-style:none;margin:0;padding:0}
+  .rank li{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--rule);font-size:16px}
+  .rank li:first-child{border-top:0}
+  .rank .n{font-family:"IBM Plex Mono",Consolas,monospace;font-size:20px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+  .who{cursor:pointer;text-decoration:underline;text-decoration-color:var(--rule2);text-underline-offset:3px}
+  .who:hover{text-decoration-color:var(--ink)}
+  .rank .hats{font-size:14px;color:var(--ink2)}
+  .dots{display:inline-flex;gap:4px}
+  .dots i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .dots i.plan{background:var(--plan)} .dots i.ob{background:var(--ob)} .dots i.bb{background:var(--bb)} .dots i.bp{background:var(--bp)} .dots i.land{background:var(--land)}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:4px 0 8px}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px;line-height:1.35}
+  th{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:left;color:var(--muted);padding:8px 10px 8px 0;border-bottom:1px solid var(--rule2);vertical-align:bottom}
+  td{padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+  td:last-child,th:last-child{padding-right:0}
+  .pair{white-space:nowrap}
+  .pair .pole{font-size:12px}
+  .rules{margin:0;padding-left:0;list-style:none}
+  .rules li{padding:6px 0 6px 20px;position:relative;font-size:15.5px;border-top:1px solid var(--rule)}
+  .rules li:first-child{border-top:0}
+  .rules li::before{content:"";position:absolute;left:0;top:13px;width:10px;height:10px;background:var(--ink)}
+  .foot{padding-top:20px;border-top:1px solid var(--rule);color:var(--muted);font-size:13.5px}
+  .foot a{color:inherit}
+  @media (max-width:420px){body{font-size:16.5px} h1{font-size:36px} .wrap{padding:20px 13px 56px}}
+  @media (prefers-reduced-motion:no-preference){.edge,.node{transition:opacity .18s ease}}
+  /* render modes for static exports: ?og=1 (1200x630 link card) and ?frame=1 (map only) */
+  .og .wrap{max-width:1200px;width:1200px;height:630px;padding:0;position:relative;overflow:hidden;background:var(--ground)}
+  .og .wrap>*{display:none}
+  .og #mapsec{display:block;position:absolute;right:24px;top:0;padding:0;border:0}
+  .og #mapsec>*:not(.mapwrap){display:none}
+  .og .mapwrap{border:0;background:transparent;overflow:visible}
+  .og .mapwrap svg{min-width:0;width:auto;height:630px}
+  .og .ogtitle{display:block;position:absolute;left:48px;top:0;width:520px;height:630px;padding:54px 0 0;z-index:2}
+  .ogtitle{display:none}
+  .ogtitle .mast{font-size:17px;margin-bottom:22px}
+  .ogtitle h1{font-size:74px;line-height:.95;margin:0 0 22px}
+  .ogtitle p{font-size:24px;line-height:1.35;margin:0 0 26px;max-width:none;color:var(--ink2)}
+  .ogtitle .poles{display:flex;flex-wrap:wrap;gap:10px 18px}
+  .ogtitle .pole{font-size:16px}
+  .frame .wrap{max-width:none;width:1400px;padding:0}
+  .frame .wrap>*:not(#mapsec){display:none}
+  .frame #mapsec{padding:0;border:0}
+  .frame #mapsec>*:not(.mapwrap){display:none}
+  .frame .mapwrap{border:0;border-radius:0;overflow:visible}
+  .frame .mapwrap svg{min-width:0;width:1400px}
+</style>
+<link rel="canonical" href="https://evanwrowe.com/bulldog/faction-map/">
+<meta name="description" content="Boulder's four political poles, the landholder cell under them, and the people and money vehicles that tie them together. Tap any node; every tie names its source.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Boulder Bulldog">
+<meta property="og:title" content="Boulder Faction Network">
+<meta property="og:description" content="Boulder's four political poles, the landholder cell under them, and the people and money vehicles that tie them together. Tap any node; every tie names its source.">
+<meta property="og:url" content="https://evanwrowe.com/bulldog/faction-map/">
+<meta property="og:image" content="https://evanwrowe.com/bulldog/faction-map/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Boulder Faction Network">
+<meta name="twitter:description" content="Boulder's four political poles, the landholder cell under them, and the people and money vehicles that tie them together. Tap any node; every tie names its source.">
+<meta name="twitter:image" content="https://evanwrowe.com/bulldog/faction-map/og.png">
+</head>
+<body>
+<div class="wrap">
+  <div class="ogtitle" aria-hidden="true">
+    <div class="mast">The Boulder Bulldog</div>
+    <h1>Boulder Faction Network</h1>
+    <p>Four poles, one interest underneath, and the people who sit on more than one masthead. Every tie names its source.</p>
+    <div class="poles"><span class="pole plan"><i></i>PLAN-Boulder</span><span class="pole ob"><i></i>Open Boulder</span><span class="pole bb"><i></i>Better Boulder</span><span class="pole bp"><i></i>Boulder Progressives</span><span class="pole land"><i></i>The land</span></div>
+  </div>
+  <header class="head">
+    <div class="mast"><a href="https://theboulderbulldog.substack.com/">The Boulder Bulldog</a> &nbsp;·&nbsp; a reading instrument &nbsp;·&nbsp; September 2026</div>
+    <h1>Boulder Faction Network</h1>
+    <p class="lede">Four poles, one interest underneath, and the people who sit on more than one masthead. Every line below is a published roster, a filed committee, an assessor account or a career move on the public record, and every tie names its source. Tap a node to see what it touches.</p>
+  </header>
+
+  <section id="mapsec">
+    <div class="head">
+      <div class="eyebrow">The map</div>
+      <h2>Six layers, read top to bottom</h2>
+    </div>
+    <div class="legend" aria-label="Edge legend">
+      <span><svg viewBox="0 0 34 14"><line x1="1" y1="7" x2="33" y2="7" stroke="currentColor" stroke-width="1.8"/></svg>seat, officer or paid staff</span>
+      <span><svg viewBox="0 0 34 14"><line x1="1" y1="7" x2="33" y2="7" stroke="currentColor" stroke-width="1.8" stroke-dasharray="6 3"/></svg>endorsement or slate</span>
+      <span><svg viewBox="0 0 34 14"><line x1="1" y1="7" x2="33" y2="7" stroke="currentColor" stroke-width="4"/></svg>uncapped money, width by amount</span>
+      <span><svg viewBox="0 0 34 14"><line x1="1" y1="7" x2="33" y2="7" stroke="currentColor" stroke-width="1" stroke-dasharray="1 3"/></svg>$100 capped gift</span>
+      <span><svg viewBox="0 0 34 14"><line x1="1" y1="7" x2="33" y2="7" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 4"/></svg>career or appointment</span>
+    </div>
+    <div class="chips" id="typeChips" role="group" aria-label="Show edges of one kind">
+      <button class="chip" data-type="all" aria-pressed="true">All ties</button>
+      <button class="chip" data-type="board" aria-pressed="false">Seats</button>
+      <button class="chip" data-type="endorse" aria-pressed="false">Endorsements</button>
+      <button class="chip" data-type="money" aria-pressed="false">Money</button>
+      <button class="chip" data-type="career" aria-pressed="false">Careers</button>
+      <button class="chip" data-type="cap" aria-pressed="false">$100 gifts</button>
+    </div>
+    <div class="chips" id="poleChips" role="group" aria-label="Focus one pole">
+      <button class="chip plan" data-focus="PLAN" aria-pressed="false">PLAN-Boulder</button>
+      <button class="chip ob" data-focus="OB" aria-pressed="false">Open Boulder</button>
+      <button class="chip bb" data-focus="BB" aria-pressed="false">Better Boulder</button>
+      <button class="chip bp" data-focus="BP" aria-pressed="false">Boulder Progressives</button>
+      <button class="chip" data-focus="LANDCELL" aria-pressed="false">The land</button>
+      <button class="chip" data-focus="" aria-pressed="false">Reset</button>
+    </div>
+    <div class="mapwrap" id="mapwrap"></div>
+    <p class="hint">Swipe sideways on a phone; pinch to zoom. Node size is the number of ties on the record. Pole colors carry identity only with the label beside them.</p>
+    <div class="card" id="card"><p class="empty">Tap any node to list its ties, each with its source.</p></div>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Network effects</div>
+      <h2>The most connected nodes</h2>
+    </div>
+    <p class="note">Ties counted from the map above, $100 gifts excluded. The colored squares show which poles the node touches directly or through one vehicle.</p>
+    <ol class="rank" id="rank"></ol>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">The bridges</div>
+      <h2>What connects each pair of poles</h2>
+    </div>
+    <p class="note">Computed from the edge list: a bridge is a person or vehicle tied to both poles. Direct pole-to-pole ties are listed first.</p>
+    <div class="scroll"><table id="bridges"><thead><tr><th>Pair</th><th>Direct tie</th><th>Bridges</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Cui bono</div>
+      <h2>What each program does to the price of land</h2>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Pole</th><th>Program</th><th>Mechanism</th><th>Who is long</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pole plan"><i></i>PLAN / homevoters</span></td><td>Restrict supply</td><td>Scarcity capitalizes into the standing stock</td><td>Incumbent owners</td></tr>
+          <tr><td><span class="pole bb"><i></i>Better Boulder</span></td><td>Build density on subsidy and entitlements</td><td>Developable dirt appreciates; fees banked at entitlement</td><td>Developers, landowners at the nodes</td></tr>
+          <tr><td><span class="pole ob"><i></i>Open Boulder</span></td><td>Defend parking, clear encampments, keep single-family intact</td><td>Frontage and existing neighborhoods protected</td><td>CRE landlords, incumbent neighborhoods</td></tr>
+          <tr><td><span class="pole bp"><i></i>Boulder Progressives</span></td><td>Legalize more people per parcel</td><td>Raises what a parcel can legally carry</td><td>Landowners; renters at the margin</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Four programs, four mechanisms, every one long the asset. The cell funds the business side because that is where the uncapped fights are: fees in 2015, encampments in 2023, parking in 2025. It appears in the progressive committees once, a single $100 in 2019.</p>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Method</div>
+      <h2>What this map does not claim</h2>
+    </div>
+    <ul class="rules">
+      <li>It records positions, filings and published rosters. It attributes no motive to any person.</li>
+      <li>Co-endorsement is not coordination. Where an endorsement coalition is described, it is in the words of the people who built it. No coordinated spending is alleged anywhere.</li>
+      <li>Boulder caps gifts to candidate committees at $100, so every candidate-cycle gift on the map is a capped gift. Concentrated money appears only where a ballot measure or an independent committee is uncapped.</li>
+      <li>One person who appears on both the Better Boulder and Boulder Progressives pages is not drawn, because the two pages never link the two names.</li>
+      <li>Rosters move. Board pages were last read in August and September 2026; committee filings run through the 2025 cycle.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="head">
+      <div class="eyebrow">Not yet on the record</div>
+      <h2>What would change this map before November 3</h2>
+    </div>
+    <ul class="rules">
+      <li>2026 endorsements from Better Boulder and Open Boulder. Neither had posted at the last check; both co-host the candidate forums with PLAN-Boulder County.</li>
+      <li>The 2026 committee filings in the city's election archive.</li>
+      <li>Colorado Secretary of State records for both Open Boulder entities and for any Boulder Progressives entity.</li>
+    </ul>
+  </section>
+
+  <footer class="foot">
+    <p>Sources, by kind: City of Boulder election records (the Laserfiche archive of committee filings, 2015 and 2019 to 2025); the four organizations' own board and endorsement pages, current and as archived by the Wayback Machine; Colorado TRACER contribution files 2022 to 2026; Boulder County Assessor valuations for tax year 2026; IRS filings via ProPublica; Colorado DORA license data; city, county, state and district web pages; and, where marked, Boulder Reporting Lab and Boulder Weekly reporting. Companion to <a href="https://theboulderbulldog.substack.com/">The Boulder Bulldog</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  // ---------- NODES ----------
+  var N = [
+    {id:"POLIS", kind:"public", x:200, y:80, l:"Gov. Polis's lane", s:"Colorado Energy Office"},
+    {id:"NEGUSE", kind:"public", x:430, y:80, l:"Rep. Neguse's office", s:"CD-2"},
+    {id:"CAPITOL", kind:"public", x:640, y:80, l:"State Capitol", s:"House"},
+    {id:"CFF", kind:"money", x:900, y:80, l:"Colorado Future Forward", s:"IEC · DA Dougherty for AG (2026)", amt:"$50K Caruso · $25K Tebo"},
+    {id:"COUNTY", kind:"public", x:110, y:230, l:"Boulder County", s:"commissioners"},
+    {id:"COUNCIL", kind:"public", x:330, y:230, l:"City Council", s:"mayor + 8"},
+    {id:"PB", kind:"public", x:540, y:230, l:"Planning Board", s:"city"},
+    {id:"ADV", kind:"public", x:740, y:230, l:"Advisory boards", s:"Housing · Transportation · Open Space"},
+    {id:"BHP", kind:"public", x:950, y:230, l:"Boulder Housing Partners", s:"housing authority"},
+    {id:"PLAN", kind:"pole", pole:"plan", x:120, y:420, l:"PLAN-Boulder County", s:"slow growth · 1959"},
+    {id:"OB", kind:"pole", pole:"ob", x:390, y:420, l:"Open Boulder", s:"business-moderate c4 + c3"},
+    {id:"BB", kind:"pole", pole:"bb", x:720, y:420, l:"Better Boulder", s:"density c4 · $0 books"},
+    {id:"BP", kind:"pole", pole:"bp", x:975, y:420, l:"Boulder Progressives", s:"endorsement brand · no entity"},
+    {id:"FOUNDRY", kind:"org", x:240, y:520, l:"Foundry Group / Feld", s:"venture capital"},
+    {id:"CHAMBER", kind:"org", x:555, y:520, l:"Boulder Chamber", s:""},
+    {id:"REALTORS", kind:"org", x:860, y:520, l:"Realtor associations", s:"BAR · NAR"},
+    {id:"WEAVER", kind:"person", row:0, l:"Weaver"},
+    {id:"DURGIN", kind:"person", row:0, l:"Durgin"},
+    {id:"MOREHOUSE", kind:"person", row:0, l:"Morehouse"},
+    {id:"MENEGHEL", kind:"person", row:0, l:"Meneghel"},
+    {id:"TAYER", kind:"person", row:0, l:"Tayer"},
+    {id:"SPEAR", kind:"person", row:0, l:"Spear"},
+    {id:"HOTARD", kind:"person", row:0, l:"Hotard"},
+    {id:"ESPINOZA", kind:"person", row:0, l:"Espinoza"},
+    {id:"PRANT", kind:"person", row:0, l:"Prant"},
+    {id:"BECKER", kind:"person", row:0, l:"Becker"},
+    {id:"TOOR", kind:"person", row:0, l:"Toor"},
+    {id:"BEAN", kind:"person", row:0, l:"Bean"},
+    {id:"MARTENS", kind:"person", row:0, l:"Martens"},
+    {id:"YATES", kind:"person", row:1, l:"Yates"},
+    {id:"CARUSO", kind:"person", row:1, l:"Caruso"},
+    {id:"BRNCIC", kind:"person", row:1, l:"Brncic"},
+    {id:"ROBINS", kind:"person", row:1, l:"Robins"},
+    {id:"KAPLAN", kind:"person", row:1, l:"Kaplan"},
+    {id:"BURTON", kind:"person", row:1, l:"Burton"},
+    {id:"MCINTYRE", kind:"person", row:1, l:"McIntyre"},
+    {id:"BENJAMIN", kind:"person", row:1, l:"Benjamin"},
+    {id:"BUDD", kind:"person", row:1, l:"Budd"},
+    {id:"FIVIAN", kind:"person", row:1, l:"Fivian"},
+    {id:"AIZENMAN", kind:"person", row:1, l:"Aizenman"},
+    {id:"SCHULTHEISS", kind:"person", row:1, l:"Schultheiss"},
+    {id:"LEVY", kind:"person", row:2, l:"Levy"},
+    {id:"ROBINSON", kind:"person", row:2, l:"Robinson"},
+    {id:"VILLANUEVA", kind:"person", row:2, l:"Villanueva"},
+    {id:"MILLS", kind:"person", row:2, l:"Mills"},
+    {id:"ENSIGN", kind:"person", row:2, l:"Ensign"},
+    {id:"OGREN", kind:"person", row:2, l:"Ogren"},
+    {id:"HANSONTHIEM", kind:"person", row:2, l:"Hanson Thiem"},
+    {id:"BROCKETT", kind:"person", row:2, l:"Brockett"},
+    {id:"GRANO", kind:"person", row:2, l:"Grano"},
+    {id:"JOSEPH", kind:"person", row:2, l:"Joseph"},
+    {id:"ONEBOULDER", kind:"money", x:110, y:950, l:"One Boulder 2015", s:"twin issue committees", amt:"$181K as filed"},
+    {id:"ELEVATED", kind:"money", x:300, y:950, l:"Forward Boulder '21 / Boulder Elevated '23", s:"moderate slates · same treasurer", amt:"$16.8K / $5.6K"},
+    {id:"SAFEZONES", kind:"money", x:480, y:950, l:"Safe Zones 4 Kids 2023", s:"camping ban", amt:"$18,944 vs $4,757"},
+    {id:"WESTPEARL", kind:"money", x:655, y:950, l:"Keep West Pearl 2025", s:"parking", amt:"$27,224 vs $3,600"},
+    {id:"BEDROOMS", kind:"money", x:830, y:950, l:"Bedrooms Are For People 2021", s:"occupancy", amt:"$30,762 · lost ~58% no"},
+    {id:"Q2E", kind:"money", x:1000, y:950, l:"Question 2E 2022", s:"even-year elections", amt:"passed 62-38"},
+    {id:"NOBEDROOMS", kind:"money", x:200, y:1030, l:"No on Bedroom$ 2021", s:"homevoter money", amt:"$19,558"},
+    {id:"ENGAGE", kind:"money", x:390, y:1030, l:"Engage Boulder", s:"Caruso newsletter / IEC", amt:""},
+    {id:"NEWR", kind:"money", x:570, y:1030, l:"NEWR 2020", s:"right to counsel · tenant cell", amt:"$42,602"},
+    {id:"NEWERA", kind:"money", x:760, y:1030, l:"New Era Colorado", s:"statewide c3/c4 · IE", amt:"$6,851 in 2025"},
+    {id:"WFP", kind:"money", x:930, y:1030, l:"Working Families Party PAC", s:"Brooklyn · IE", amt:"$23.8K in 2023"},
+    {id:"TEBO", kind:"land", x:150, y:1150, l:"Tebo", s:"~$519M · ~190 accounts"},
+    {id:"REYNOLDS", kind:"land", x:330, y:1150, l:"W.W. Reynolds", s:"~$429M · ~44 entities"},
+    {id:"DELLACAVA", kind:"land", x:500, y:1150, l:"DellaCava / LJD", s:"~$90M"},
+    {id:"FELDMAN", kind:"land", x:670, y:1150, l:"Feldman / Conscience Bay", s:"~$94M"},
+    {id:"ELEMENT", kind:"land", x:840, y:1150, l:"Element Properties", s:"Bean · Holton · Knapp"},
+    {id:"WESTPEARLLLC", kind:"land", x:1000, y:1150, l:"West Pearl LLC", s:"one gift"}
+  ];
+  var LANDCELL = ["TEBO","REYNOLDS","DELLACAVA","FELDMAN","ELEMENT","WESTPEARLLLC"];
+
+  // ---------- SOURCES (internal code -> public description) ----------
+  var PUB = {
+    "BB §2b":"2015 committee filings, City of Boulder election records (Laserfiche DocIDs 141221, 141225)",
+    "BB §3":"betterboulder.com board and endorsement pages",
+    "BB":"betterboulder.com board and endorsement pages",
+    "OB §1":"IRS filings via ProPublica Nonprofit Explorer (EINs 47-1061512 and 47-1050564)",
+    "OB §2":"openboulder.org board pages, read 2026-09-11",
+    "OB §3":"openboulder.org news entries, 2021-09-22 and 2026-08-21",
+    "OB §2, §3":"openboulder.org board pages and news entries",
+    "OBW":"openboulder.org About page, Wayback capture 2015-10-16",
+    "TRAIL":"City of Boulder committee filings 2019 to 2025 (Laserfiche)",
+    "BPU §1a-bis":"betterboulder.com/board-of-directors, Wayback captures 2019-05-25 and 2022-05-27",
+    "BPU §1a":"bouldercoloradovoterguide.com/about-eric-budd",
+    "BPU §1c":"betterboulder.com and boulderprogressives.org board pages, 2026-08-22",
+    "BPU §2":"boulderprogressives.org/board, 2026-08-22",
+    "BPU §1, §2":"boulderprogressives.org/board, 2026-08-22",
+    "BPU §3":"boulderprogressives.org 2026 slate announcement; Boulder Reporting Lab",
+    "Q2E-BB":"betterboulder.com 2022 ballot-measure endorsements, Wayback capture 2022-09-29",
+    "Q2E-BP":"boulderprogressives.org 2022 voter guide, Wayback capture 2022-10-21",
+    "CMAP §3a":"City of Boulder committee filings 2019 to 2025","CMAP §3b":"City of Boulder committee filings 2019","CMAP §3c":"City of Boulder committee filings 2019 to 2025",
+    "CMAP §4":"Boulder Reporting Lab candidate profiles; boulderprogressives.org",
+    "CMAP §5":"City of Boulder committee filings 2020 and 2021",
+    "CMAP §1c":"IRS Form 990s, New Era Colorado; City of Boulder independent-expenditure filings 2023 and 2025",
+    "CMAP §1d":"FEC committee C00606962; City of Boulder election complaint determination 2023-EC-001",
+    "SUM §2":"betterboulder.com and openboulder.org endorsement pages; City of Boulder committee filings",
+    "SUM §4":"the organizations' published board pages",
+    "SUM §5d":"Colorado TRACER contribution records 2022 to 2026","CIRCUIT §4":"Colorado TRACER contribution records 2022 to 2026",
+    "SUM §1d":"boulderprogressives.org/board",
+    "SUM §1c":"PLAN-Boulder County's published positions",
+    "BALLOT":"bouldercolorado.gov, 2026 mayoral and council candidates page",
+    "CITY":"bouldercolorado.gov council member page",
+    "CEO":"Colorado Energy Office press release, 2025-02-18",
+    "LEG":"leg.colorado.gov legislator pages",
+    "COSSA":"cossa.co announcement, 2025-03-18",
+    "BHP":"boulderhousing.org, Board of Commissioners page",
+    "DORA":"Colorado DORA license data, IA 100031566",
+    "PMT":"DRCOG and Colorado Municipal League committee rosters",
+    "FRPRD":"Front Range Passenger Rail District board page; bouldercounty.gov",
+    "BRL":"Boulder Reporting Lab (press)",
+    "BW":"Boulder Weekly, 2017 (press)",
+    "CENSUS":"Boulder County Assessor, tax year 2026",
+    "PM":"IRS Form 990 Schedule L, All Roads FY2023; Zinnia LLLP MOU, City of Longmont, 2024"
+  };
+  function pubSrc(src){
+    var seen={}, out=[];
+    src.split(" · ").forEach(function(tok){
+      tok=tok.trim(); var lab = PUB[tok] || PUB[tok.split(" ")[0]] || tok;
+      if(!seen[lab]){ seen[lab]=true; out.push(lab); }
+    });
+    return out.join("; ");
+  }
+
+  // ---------- EDGES ----------
+  // t: board | endorse | money | cap | career | align · amt in dollars for money width · src = source code (see PUB)
+  var E = [
+    {a:"BUDD",b:"BP",t:"board",d:"Co-founder 2019; executive team today; co-founder of Bedrooms Are For People",src:"BPU §1, §2"},
+    {a:"BUDD",b:"BB",t:"board",d:"Leadership team in every sampled capture 2019 to today; vice chair in 2022; the 2019 team was co-chaired by the Realtor Association's senior vice president",src:"BPU §1a-bis"},
+    {a:"BUDD",b:"BEDROOMS",t:"board",d:"Co-chair of the 2020 committee; $2,026.61 to the 2021 committee",src:"CMAP §5 · TRAIL §2"},
+    {a:"BUDD",b:"Q2E",t:"board",d:"Campaign co-director, People For Voter Turnout, 2022, on his own published résumé",src:"BPU §1a"},
+    {a:"BUDD",b:"OB",t:"cap",d:"$100 in 2019, the identical-slate year",src:"CMAP §3b"},
+    {a:"BUDD",b:"NEWR",t:"cap",d:"$358 to the 2020 tenant measure; did not run it",src:"CMAP §5"},
+    {a:"ESPINOZA",b:"OB",t:"board",d:"Listed as an Open Boulder founder and former councilmember on its 2015 About page",src:"OBW"},
+    {a:"ESPINOZA",b:"BB",t:"board",d:"On the five-person 2019 leadership team with Hotard, Prant, Tayer and Budd",src:"BPU §1a-bis"},
+    {a:"ESPINOZA",b:"BUDD",t:"career",d:"Budd was campaign project manager for her 2016 state-house primary, on his own résumé",src:"BPU §1a"},
+    {a:"BURTON",b:"BB",t:"board",d:"Listed as co-founder on the leadership page",src:"BPU §1a-bis"},
+    {a:"BURTON",b:"OB",t:"board",d:"Chair of the c4; chaired the 2025 committee that ran against Better Boulder's endorsees",src:"OB §2 · TRAIL §2"},
+    {a:"BURTON",b:"BP",t:"cap",d:"$100 in 2019; Boulder is for People 2021",src:"CMAP §3a"},
+    {a:"BURTON",b:"COUNCIL",t:"career",d:"Former councilmember, elected 2015",src:"OB §2"},
+    {a:"MCINTYRE",b:"BB",t:"board",d:"Chair",src:"BB §3"},
+    {a:"MCINTYRE",b:"OB",t:"board",d:"Board member in 2020",src:"OB §2"},
+    {a:"MCINTYRE",b:"PB",t:"board",d:"Sitting Planning Board member (not Ryan McIntyre of Foundry)",src:"BB §3"},
+    {a:"MCINTYRE",b:"BP",t:"cap",d:"$100 in 2019; Sierra Club Indian Peaks 2023",src:"CMAP §3a"},
+    {a:"BENJAMIN",b:"OB",t:"board",d:"Board member in December 2020; endorsed by its committee in 2021 and 2025",src:"OB §2, §3"},
+    {a:"BENJAMIN",b:"BB",t:"endorse",d:"Endorsed 2021 and 2025, the year the two vehicles ran opposite slates",src:"SUM §2"},
+    {a:"BENJAMIN",b:"BP",t:"cap",d:"Donor 2019 and 2021, then on the moderate slate in 2025",src:"CMAP §3c"},
+    {a:"BENJAMIN",b:"COUNCIL",t:"board",d:"Councilmember 2021 to date; DRCOG policy committee; Colorado Municipal League policy committee, former chair",src:"CMAP §4 · PMT"},
+    {a:"BENJAMIN",b:"CFF",t:"money",amt:5000,d:"$5,000 to the Dougherty-for-AG committee",src:"SUM §5d"},
+    {a:"TOOR",b:"BB",t:"board",d:"Co-founder; former mayor",src:"BB §3"},
+    {a:"TOOR",b:"ONEBOULDER",t:"board",d:"Chair of both twin committees, 2015 (city-certified 8/3/2015)",src:"BB §2b"},
+    {a:"TOOR",b:"BEDROOMS",t:"money",amt:208,d:"$208 in 2021; Sierra Club committees 2023 and 2025. One man, not a pattern.",src:"TRAIL §3c"},
+    {a:"TOOR",b:"POLIS",t:"career",d:"Executive director, Colorado Energy Office",src:"CEO"},
+    {a:"BECKER",b:"ONEBOULDER",t:"money",amt:35,d:"First donor on the schedule, 8/1/2015",src:"BB §2b"},
+    {a:"BECKER",b:"BB",t:"board",d:"Board member today",src:"BB §3"},
+    {a:"BECKER",b:"CAPITOL",t:"career",d:"Former state representative for House District 13 and Speaker of the House; since March 2025 CEO of the Colorado Solar and Storage Association",src:"LEG · COSSA"},
+    {a:"BECKER",b:"OB",t:"board",d:"On the 2026 performance-auditor committee",src:"OB §2"},
+    {a:"DURGIN",b:"ONEBOULDER",t:"board",d:"Secretary of both twin committees, 2015; $200 while an officer",src:"BB §2b"},
+    {a:"DURGIN",b:"BB",t:"board",d:"Board member in the 2022 capture",src:"BPU §1a-bis"},
+    {a:"DURGIN",b:"OB",t:"board",d:"c4 board member; former mayor; business-moderate donor every cycle",src:"OB §2 · TRAIL §3c"},
+    {a:"AIZENMAN",b:"FELDMAN",t:"career",d:"Director of Development and Design, Conscience Bay Company",src:"BPU §1a-bis"},
+    {a:"AIZENMAN",b:"BB",t:"board",d:"Board member through at least October 2025; off the page by August 2026",src:"SUM §4"},
+    {a:"AIZENMAN",b:"OB",t:"cap",d:"$100 to the 2025 committee",src:"TRAIL §3b"},
+    {a:"FIVIAN",b:"BB",t:"board",d:"Board member in the 2022 capture",src:"BPU §1a-bis"},
+    {a:"FIVIAN",b:"BP",t:"board",d:"Board member today",src:"BPU §2"},
+    {a:"GRANO",b:"COUNCIL",t:"career",d:"Councilmember 2017 to January 2019",src:"BPU §3"},
+    {a:"GRANO",b:"NEGUSE",t:"career",d:"Rep. Neguse's first Director of Community Affairs",src:"BPU §3"},
+    {a:"GRANO",b:"BHP",t:"board",d:"Commissioner, first appointed 2022, per the housing authority's board page; active broker license since 2010",src:"BHP · DORA"},
+    {a:"GRANO",b:"BP",t:"endorse",d:"On the 2026 slate, seven names for six openings",src:"BPU §3"},
+    {a:"BROCKETT",b:"BB",t:"board",d:"“A former member of our Board of Directors,” in the group's 2023 endorsement page",src:"BB §3"},
+    {a:"BROCKETT",b:"COUNCIL",t:"board",d:"Mayor; council since 2015; on the November 3 ballot",src:"CMAP §4 · BALLOT"},
+    {a:"BROCKETT",b:"PB",t:"career",d:"Planning Board 2011 to 2015",src:"CMAP §4"},
+    {a:"BROCKETT",b:"POLIS",t:"endorse",d:"Endorsed by Polis in 2023; stood beside him on the 2023 land-use bill",src:"BRL"},
+    {a:"TAYER",b:"CHAMBER",t:"board",d:"President and CEO",src:"BB §3"},
+    {a:"TAYER",b:"BB",t:"board",d:"Board member; on the 2019 leadership team",src:"BPU §1a-bis"},
+    {a:"MENEGHEL",b:"CHAMBER",t:"career",d:"Six years the Chamber's director of government affairs",src:"OB §2"},
+    {a:"MENEGHEL",b:"OB",t:"board",d:"Secretary of the c4",src:"OB §2"},
+    {a:"MENEGHEL",b:"ONEBOULDER",t:"board",d:"Paid campaign organizer: “Campaign Organizing” expenditure lines from September to November 2015 on both twin committees, roughly $10,400 across the two ledgers",src:"BB §2b"},
+    {a:"SPEAR",b:"BB",t:"board",d:"Treasurer; branch president, Bank of Colorado",src:"BB §3"},
+    {a:"SPEAR",b:"CHAMBER",t:"board",d:"Chamber board",src:"BB §3"},
+    {a:"BEAN",b:"ELEMENT",t:"board",d:"Principal; manager of the Zinnia owner entity; secretary of All Roads, whose FY2023 Schedule L lists loans to two entities where she is the interested person",src:"BB §3 · PM"},
+    {a:"BEAN",b:"BB",t:"board",d:"Board member",src:"BB §3"},
+    {a:"ELEMENT",b:"ONEBOULDER",t:"money",amt:1019,d:"Holton $970.70 and Knapp $48.25, personally",src:"BB §2b"},
+    {a:"ELEMENT",b:"BHP",t:"align",d:"The housing authority is Element's co-developer on the SPARKwest and Ciclo buildings",src:"PM"},
+    {a:"MARTENS",b:"BHP",t:"career",d:"Executive director for twenty years",src:"BB §3"},
+    {a:"MARTENS",b:"BB",t:"board",d:"Board member and consultant",src:"BB §3"},
+    {a:"SCHULTHEISS",b:"OB",t:"career",d:"Executive director ($50,984 in 2017)",src:"OB §1"},
+    {a:"SCHULTHEISS",b:"POLIS",t:"career",d:"Came to Open Boulder from Rep. Polis's office, where he had been Colorado Director and before that Chief of Staff, per Open Boulder's 2015 About page",src:"OBW"},
+    {a:"SCHULTHEISS",b:"ONEBOULDER",t:"money",amt:37,d:"In-kind $18.50 on each twin, dated 8/1/2015, the first day on both schedules",src:"BB §2b"},
+    {a:"CARUSO",b:"ELEVATED",t:"board",d:"Boulder Elevated was his 2023 vehicle; Zayo and Level 3 co-founder",src:"TRAIL §2"},
+    {a:"CARUSO",b:"ENGAGE",t:"board",d:"His newsletter and independent-expenditure vehicle; in 2025 its emails opposed Folkerts and Speer",src:"BW · BRL"},
+    {a:"CARUSO",b:"SAFEZONES",t:"money",amt:3000,d:"$3,000",src:"TRAIL §2"},
+    {a:"CARUSO",b:"CFF",t:"money",amt:50000,d:"$50,000",src:"SUM §5d"},
+    {a:"CARUSO",b:"BP",t:"cap",d:"$100 in 2019 (Dan and Cindy)",src:"CMAP §3a"},
+    {a:"CARUSO",b:"OB",t:"cap",d:"$100 to the 2025 committee; ten appearances in the dataset",src:"TRAIL §3c"},
+    {a:"MOREHOUSE",b:"ONEBOULDER",t:"board",d:"Treasurer 2015; his firm Vermilion took about $18K of the design spend",src:"BB §2b"},
+    {a:"MOREHOUSE",b:"BP",t:"cap",d:"$100 in 2019",src:"CMAP §3a"},
+    {a:"MOREHOUSE",b:"OB",t:"cap",d:"$100 to the 2025 committee",src:"TRAIL §3c"},
+    {a:"YATES",b:"ELEVATED",t:"endorse",d:"The 2023 slate was built around him; ex-Level 3; lost the first direct mayoral race",src:"TRAIL §2"},
+    {a:"YATES",b:"COUNCIL",t:"career",d:"Two terms, 2015 to 2023",src:"BRL"},
+    {a:"YATES",b:"SAFEZONES",t:"money",amt:100,d:"Donor (amount not carried in the filing summary)",src:"TRAIL §3c"},
+    {a:"ROBINS",b:"ELEVATED",t:"endorse",d:"On the 2023 Boulder Elevated slate",src:"TRAIL §2"},
+    {a:"ROBINS",b:"OB",t:"board",d:"Elected on its 2025 slate; sits on its 2026 auditor committee",src:"OB §2"},
+    {a:"ROBINS",b:"COUNCIL",t:"board",d:"Councilmember since 2025",src:"CITY"},
+    {a:"KAPLAN",b:"OB",t:"endorse",d:"“To support Jenny Robins, Rob Kaplan, Mark Wallach, and Matt Benjamin for City Council” (statement of organization 200650)",src:"TRAIL §2"},
+    {a:"KAPLAN",b:"PLAN",t:"endorse",d:"PLAN-Boulder County lined up behind him against Folkerts in 2025",src:"BRL"},
+    {a:"KAPLAN",b:"COUNCIL",t:"board",d:"Councilmember since 2025; his council bio describes a commercial real estate background “as both a landlord and a tenant”",src:"CITY"},
+    {a:"BRNCIC",b:"OB",t:"board",d:"c3 board; co-author of the 2026 bond papers",src:"OB §2"},
+    {a:"BRNCIC",b:"ELEVATED",t:"endorse",d:"Candidate on the 2023 slate",src:"TRAIL §2"},
+    {a:"BRNCIC",b:"SAFEZONES",t:"board",d:"Co-lead of the 2023 measure",src:"OB §2"},
+    {a:"LEVY",b:"COUNTY",t:"board",d:"Sitting commissioner; director of the Front Range Passenger Rail District",src:"FRPRD"},
+    {a:"LEVY",b:"CFF",t:"money",amt:1000,d:"$1,000 to the committee; $950 direct to Dougherty",src:"SUM §5d"},
+    {a:"HANSONTHIEM",b:"BP",t:"board",d:"Executive team",src:"BPU §1c"},
+    {a:"HANSONTHIEM",b:"PB",t:"board",d:"Planning Board member",src:"BPU §1c"},
+    {a:"ENSIGN",b:"BB",t:"board",d:"Board member",src:"BPU §1c"},
+    {a:"ENSIGN",b:"PB",t:"board",d:"Planning Board member",src:"BPU §1c"},
+    {a:"OGREN",b:"BB",t:"board",d:"Leadership team",src:"BPU §1c"},
+    {a:"OGREN",b:"ADV",t:"board",d:"Housing Advisory Board",src:"BPU §1c"},
+    {a:"MILLS",b:"BP",t:"board",d:"Executive team",src:"SUM §1d"},
+    {a:"MILLS",b:"ADV",t:"board",d:"Transportation Advisory Board",src:"SUM §1d"},
+    {a:"VILLANUEVA",b:"OB",t:"board",d:"c3 board",src:"OB §2"},
+    {a:"VILLANUEVA",b:"ADV",t:"board",d:"Transportation Advisory Board",src:"OB §2"},
+    {a:"ROBINSON",b:"OB",t:"board",d:"An Open Boulder founder on its 2015 About page; c3 board today; treasurer of the 2025 committee",src:"OBW · OB §2 · TRAIL §2"},
+    {a:"ROBINSON",b:"ADV",t:"board",d:"Open Space Board of Trustees",src:"OB §2"},
+    {a:"WEAVER",b:"OB",t:"board",d:"c4 board; mayor 2019 to 2021",src:"OB §2"},
+    {a:"WEAVER",b:"COUNCIL",t:"career",d:"Council 2013 to 2021",src:"OB §2"},
+    {a:"PRANT",b:"BB",t:"board",d:"Co-chair 2019; chair 2022; Community Cycles executive director",src:"BPU §1a-bis"},
+    {a:"PRANT",b:"ONEBOULDER",t:"board",d:"Treasurer of the 2015 shell committee registered at Better Boulder's address (ISC-038, no money filed)",src:"BB §2b"},
+    {a:"HOTARD",b:"REALTORS",t:"career",d:"Senior vice president, Boulder Area Realtor Association",src:"BPU §1a-bis"},
+    {a:"HOTARD",b:"BB",t:"board",d:"Co-chair of the 2019 leadership team",src:"BPU §1a-bis"},
+    {a:"HOTARD",b:"ONEBOULDER",t:"money",amt:35,d:"In the founding round, 8/1/2015",src:"BB §2b"},
+    {a:"JOSEPH",b:"COUNCIL",t:"board",d:"Council 2019 to 2023",src:"CMAP §4"},
+    {a:"JOSEPH",b:"BP",t:"endorse",d:"Endorsed 2019; a tenant-protective record",src:"CMAP §4"},
+    {a:"JOSEPH",b:"CAPITOL",t:"career",d:"State House District 10",src:"LEG"},
+    {a:"BB",b:"ONEBOULDER",t:"money",amt:5000,d:"$2,500 into each twin",src:"BB §2b"},
+    {a:"OB",b:"ONEBOULDER",t:"align",d:"Umbrella partner with Better Boulder and the Chamber; its executive director's in-kind is on the first day of both schedules",src:"BB §2b"},
+    {a:"CHAMBER",b:"ONEBOULDER",t:"align",d:"The third leg of the 2015 coalition; its CEO gave in the founding round",src:"BB §2b"},
+    {a:"REALTORS",b:"ONEBOULDER",t:"money",amt:26000,d:"BAR $10,000; NAR $16,000 in-kind (counted once). Absent from every capped cycle since.",src:"BB §2b · TRAIL §3b"},
+    {a:"FOUNDRY",b:"ONEBOULDER",t:"money",amt:5000,d:"Foundry Group LLC $5,000; Feld and Batchelor $35 each in the founding round",src:"BB §2b"},
+    {a:"TEBO",b:"ONEBOULDER",t:"money",amt:7500,d:"Tebo Properties $7,500",src:"BB §2b"},
+    {a:"REYNOLDS",b:"ONEBOULDER",t:"money",amt:10000,d:"W.W. Reynolds $10,000, 10/19 and 10/28",src:"BB §2b"},
+    {a:"DELLACAVA",b:"ONEBOULDER",t:"money",amt:5000,d:"LJD Enterprises $5,000, 9/25",src:"BB §2b"},
+    {a:"FELDMAN",b:"ONEBOULDER",t:"money",amt:1941,d:"Eli Feldman $1,941.40",src:"BB §2b"},
+    {a:"TEBO",b:"SAFEZONES",t:"money",amt:500,d:"Tebo Properties $500",src:"TRAIL §2"},
+    {a:"TEBO",b:"CFF",t:"money",amt:25000,d:"$25,000. He also gives $1,000 to the state Democratic Party (2022) and $1,500 to the county GOP (2026).",src:"SUM §5d"},
+    {a:"TEBO",b:"OB",t:"cap",d:"Tatiana Tebo $100 to the 2025 committee",src:"TRAIL §3b"},
+    {a:"FELDMAN",b:"WESTPEARL",t:"money",amt:500,d:"Conscience Bay $500",src:"TRAIL §2"},
+    {a:"FELDMAN",b:"OB",t:"cap",d:"Eli and Lauren Feldman $100 each, 2025",src:"TRAIL §3b"},
+    {a:"FELDMAN",b:"BP",t:"cap",d:"$100 in 2019: the only landholder gift into any progressive committee in the dataset",src:"CMAP §3a"},
+    {a:"WESTPEARLLLC",b:"WESTPEARL",t:"money",amt:18556,d:"$18,556, the largest single gift in the 2019 to 2025 dataset",src:"TRAIL §2"},
+    {a:"BB",b:"BP",t:"endorse",d:"Co-endorsed the progressive picks in 2021, 2023 and 2025; both endorsed 2E in 2022",src:"BB §3 · Q2E-BB · Q2E-BP"},
+    {a:"OB",b:"BP",t:"endorse",d:"2021: endorsed Benjamin, Folkerts, Speer and Williams inside the Boulder Coalition with Boulder Progressives. 2025: ran the slate that beat Folkerts and Speer.",src:"OB §3"},
+    {a:"OB",b:"BB",t:"endorse",d:"Identical six-candidate slate in 2019; opposite slates in 2025; co-hosting the 2026 forums",src:"TRAIL §3d · OB §3"},
+    {a:"OB",b:"PLAN",t:"endorse",d:"Same side behind Kaplan in 2025; co-hosting the 2026 candidate forums with Better Boulder",src:"BRL · OB §3"},
+    {a:"PLAN",b:"NOBEDROOMS",t:"align",d:"PLAN opposed occupancy increases throughout; the 2021 committee against the measure raised $19,558 (Goldsmith $4,000)",src:"SUM §1c · TRAIL §2"},
+    {a:"BP",b:"BEDROOMS",t:"board",d:"The core's own measure (Budd and Castellano); lost at the ballot, won 9 to 0 at council in March 2025 with no committee opposing",src:"CMAP §5"},
+    {a:"NEWERA",b:"BP",t:"endorse",d:"Imported money: $4,288 in 2023, $6,851 in 2025, about 0.2% of a $2.87M statewide budget",src:"CMAP §1c"},
+    {a:"WFP",b:"BP",t:"endorse",d:"The biggest independent force in 2023; negative mail against Yates",src:"CMAP §1d"},
+    {a:"NEWR",b:"BP",t:"align",d:"Built by Arango and Bennett outside the coalition; the core gave $100 to $358 each and did not run it",src:"CMAP §5"},
+    {a:"ENGAGE",b:"OB",t:"endorse",d:"Same side in 2025: its emails backed Wallach, Robins, Kaplan and Benjamin",src:"BRL"},
+    {a:"CHAMBER",b:"OB",t:"align",d:"Both oppose the $400M facilities bond (Chamber statement 9/9/2026)",src:"OB §2"},
+    {a:"Q2E",b:"BB",t:"endorse",d:"Position: SUPPORT, Vote: YES on its 2022 ballot-measure page",src:"Q2E-BB"},
+    {a:"Q2E",b:"BP",t:"endorse",d:"YES on 2E in its 2022 voter guide; this year it runs seven names for the six openings on the ballot (one mayor and five council seats)",src:"Q2E-BP · BALLOT"}
+  ];
+
+  // ---------- LAYOUT ----------
+  var W=1100, H=1230;
+  var rowsY=[640,720,800];
+  (function placePeople(){
+    var rows=[[],[],[]];
+    N.forEach(function(n){ if(n.kind==="person") rows[n.row].push(n); });
+    rows.forEach(function(r,i){
+      var left=64, right=W-64, step=(right-left)/(r.length-1);
+      r.forEach(function(n,j){ n.x=Math.round(left+j*step); n.y=rowsY[i]; });
+    });
+  })();
+  var byId={}; N.forEach(function(n){byId[n.id]=n;});
+
+  var deg={}; N.forEach(function(n){deg[n.id]=0;});
+  E.forEach(function(e){ if(e.t!=="cap"){deg[e.a]++;deg[e.b]++;} });
+
+  var poleOf=function(id){ var n=byId[id]; return n.kind==="pole"?n.pole:(n.kind==="land"?"land":null); };
+  var poleVar={plan:"var(--plan)",ob:"var(--ob)",bb:"var(--bb)",bp:"var(--bp)",land:"var(--land)"};
+  var softVar={plan:"var(--plan-soft)",ob:"var(--ob-soft)",bb:"var(--bb-soft)",bp:"var(--bp-soft)",land:"var(--land-soft)"};
+
+  function edgeWidth(e){
+    if(e.t==="money"){ var a=e.amt||100; return Math.max(1.2, Math.min(6, 1+Math.log10(a)*1.3)); }
+    if(e.t==="cap") return 1;
+    if(e.t==="career") return 1.5;
+    return 1.7;
+  }
+  function edgeDash(e){
+    if(e.t==="endorse"||e.t==="align") return "6 4";
+    if(e.t==="cap") return "1 3";
+    if(e.t==="career") return "2 4";
+    return "";
+  }
+  function edgeColor(e){
+    var p=poleOf(e.a)||poleOf(e.b);
+    if(p&&p!=="land") return poleVar[p];
+    return "var(--edge)";
+  }
+  function pathFor(e){
+    var a=byId[e.a], b=byId[e.b];
+    if(a.kind==="pole"&&b.kind==="pole"){
+      var mx=(a.x+b.x)/2, my=Math.min(a.y,b.y)-70;
+      return "M"+a.x+","+a.y+" Q"+mx+","+my+" "+b.x+","+b.y;
+    }
+    if((a.kind==="pole"||b.kind==="pole")&&(a.kind==="money"||b.kind==="money")){
+      var p=a.kind==="pole"?a:b, m=a.kind==="pole"?b:a;
+      var cx=(p.x+m.x)/2+ (m.x>p.x? -40:40), cy=(p.y+m.y)/2;
+      return "M"+a.x+","+a.y+" Q"+cx+","+cy+" "+b.x+","+b.y;
+    }
+    return "M"+a.x+","+a.y+" L"+b.x+","+b.y;
+  }
+
+  // ---------- RENDER ----------
+  var svgNS="http://www.w3.org/2000/svg";
+  function el(tag,attrs,text){ var n=document.createElementNS(svgNS,tag); for(var k in attrs){ n.setAttribute(k,attrs[k]); } if(text!=null){ n.textContent=text; } return n; }
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Boulder's political network in six layers: the state, the city and county, the four poles, the shared roster, the money vehicles, and the landholders. Lines are seats, endorsements, money, careers and capped gifts."});
+  document.getElementById("mapwrap").appendChild(svg);
+
+  var bands=[["Denver and the state",40],["City and county",190],["The four poles",360],["People on more than one masthead",595],["The money vehicles",905],["The land",1105]];
+  bands.forEach(function(b){
+    svg.appendChild(el("line",{x1:20,y1:b[1]+8,x2:W-20,y2:b[1]+8,"class":"bandline"}));
+    svg.appendChild(el("text",{x:22,y:b[1],"class":"bandlab"},b[0]));
+  });
+
+  var gE=el("g",{id:"edges"}); svg.appendChild(gE);
+  var gN=el("g",{id:"nodes"}); svg.appendChild(gN);
+
+  var edgeEls=[];
+  E.forEach(function(e,i){
+    var p=el("path",{d:pathFor(e),"class":"edge","stroke-width":edgeWidth(e),stroke:edgeColor(e)});
+    var dash=edgeDash(e); if(dash) p.setAttribute("stroke-dasharray",dash);
+    if(e.t==="cap") p.setAttribute("stroke","var(--edge)");
+    p.setAttribute("data-i",i);
+    gE.appendChild(p); edgeEls.push(p);
+  });
+
+  function radius(n){ var d=deg[n.id]; return Math.round(6+Math.min(d,10)*1.5); }
+  var nodeEls={};
+  N.forEach(function(n){
+    var g=el("g",{"class":"node",tabindex:"0",role:"button","aria-label":n.l+(n.s?", "+n.s:"")});
+    g.setAttribute("data-id",n.id);
+    if(n.kind==="pole"){
+      var w=170,h=54;
+      g.appendChild(el("rect",{x:n.x-w/2,y:n.y-h/2,width:w,height:h,rx:4,fill:softVar[n.pole],stroke:poleVar[n.pole],"stroke-width":2,"class":"hit"}));
+      g.appendChild(el("text",{x:n.x,y:n.y-3,"text-anchor":"middle","class":"nlab","font-size":"15"},n.l));
+      g.appendChild(el("text",{x:n.x,y:n.y+14,"text-anchor":"middle","class":"nsub"},n.s));
+    } else if(n.kind==="org"){
+      var w2=150,h2=40;
+      g.appendChild(el("rect",{x:n.x-w2/2,y:n.y-h2/2,width:w2,height:h2,rx:3,fill:"var(--surface)",stroke:"var(--rule2)","stroke-width":1.4,"class":"hit"}));
+      g.appendChild(el("text",{x:n.x,y:n.y+(n.s?-2:5),"text-anchor":"middle","class":"nlab"},n.l));
+      if(n.s) g.appendChild(el("text",{x:n.x,y:n.y+13,"text-anchor":"middle","class":"nsub"},n.s));
+    } else if(n.kind==="public"){
+      var w3=176,h3=44;
+      g.appendChild(el("rect",{x:n.x-w3/2,y:n.y-h3/2,width:w3,height:h3,rx:3,fill:"var(--surface)",stroke:"var(--ink2)","stroke-width":1.2,"stroke-dasharray":"4 3","class":"hit"}));
+      g.appendChild(el("text",{x:n.x,y:n.y-2,"text-anchor":"middle","class":"nlab"},n.l));
+      g.appendChild(el("text",{x:n.x,y:n.y+14,"text-anchor":"middle","class":"nsub"},n.s));
+    } else if(n.kind==="money"){
+      var sz=16+Math.min(deg[n.id],8);
+      g.appendChild(el("rect",{x:n.x-sz/2,y:n.y-sz/2,width:sz,height:sz,fill:"var(--ink)",stroke:"var(--surface)","stroke-width":2,"class":"hit"}));
+      g.appendChild(el("text",{x:n.x,y:n.y+sz/2+14,"text-anchor":"middle","class":"nlab","font-size":"12"},n.l));
+      g.appendChild(el("text",{x:n.x,y:n.y+sz/2+27,"text-anchor":"middle","class":"nsub"},n.amt||n.s));
+    } else if(n.kind==="land"){
+      var r0=radius(n)+2;
+      g.appendChild(el("polygon",{points:(n.x)+","+(n.y-r0)+" "+(n.x+r0)+","+(n.y)+" "+(n.x)+","+(n.y+r0)+" "+(n.x-r0)+","+(n.y),fill:"var(--land)",stroke:"var(--surface)","stroke-width":2,"class":"hit"}));
+      g.appendChild(el("text",{x:n.x,y:n.y+r0+15,"text-anchor":"middle","class":"nlab"},n.l));
+      g.appendChild(el("text",{x:n.x,y:n.y+r0+28,"text-anchor":"middle","class":"nsub"},n.s));
+    } else {
+      var r=radius(n);
+      g.appendChild(el("circle",{cx:n.x,cy:n.y,r:r,fill:"var(--surface)",stroke:"var(--ink)","stroke-width":1.8,"class":"hit"}));
+      g.appendChild(el("text",{x:n.x,y:n.y+r+13,"text-anchor":"middle","class":"nlab"},n.l));
+    }
+    gN.appendChild(g); nodeEls[n.id]=g;
+    g.addEventListener("click",function(){ focusNode(n.id); });
+    g.addEventListener("keydown",function(ev){ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); focusNode(n.id);} });
+  });
+
+  // ---------- STATE ----------
+  var typeFilter="all", focused=null;
+  function visibleEdge(e){ return typeFilter==="all" || e.t===typeFilter || (typeFilter==="endorse"&&e.t==="align"); }
+  function apply(){
+    var keep={};
+    if(focused){
+      var set=focused==="LANDCELL"?LANDCELL:[focused];
+      set.forEach(function(id){keep[id]=true;});
+      E.forEach(function(e){ if(!visibleEdge(e)) return; if(set.indexOf(e.a)>=0){keep[e.b]=true;} if(set.indexOf(e.b)>=0){keep[e.a]=true;} });
+    }
+    E.forEach(function(e,i){
+      var p=edgeEls[i]; var on=visibleEdge(e);
+      if(focused){ var set2=focused==="LANDCELL"?LANDCELL:[focused]; on = on && (set2.indexOf(e.a)>=0||set2.indexOf(e.b)>=0); }
+      p.classList.toggle("dim",!on);
+      p.classList.toggle("hi",!!focused&&on);
+      p.style.strokeOpacity = (!focused && typeFilter==="all") ? "0.55" : "1";
+    });
+    N.forEach(function(n){
+      var g=nodeEls[n.id]; var on=true;
+      if(focused){ on=!!keep[n.id]; }
+      else if(typeFilter!=="all"){ on=E.some(function(e){return visibleEdge(e)&&(e.a===n.id||e.b===n.id);}); }
+      g.classList.toggle("dim",!on);
+    });
+  }
+  function typeName(t){ return {board:"seat",endorse:"endorsement",money:"money",cap:"$100",career:"career",align:"aligned"}[t]||t; }
+  function renderCard(id){
+    var card=document.getElementById("card");
+    if(!id){ card.innerHTML='<p class="empty">Tap any node to list its ties, each with its source.</p>'; card.style.borderLeftColor="var(--ink)"; return; }
+    var set=id==="LANDCELL"?LANDCELL:[id];
+    var n=byId[id]||{l:"The landholder cell",s:"Tebo, Reynolds, DellaCava, Feldman; Element adjacent. Roughly $1.1B of assessed dirt by the county's own valuations."};
+    var p=poleOf(id); card.style.borderLeftColor = p ? poleVar[p] : "var(--ink)";
+    var items=[];
+    E.forEach(function(e){
+      var hit = set.indexOf(e.a)>=0 ? e.b : (set.indexOf(e.b)>=0 ? e.a : null);
+      if(!hit) return; if(!visibleEdge(e)) return;
+      var other=byId[hit]; var op=poleOf(hit);
+      var from = set.length>1 ? byId[set.indexOf(e.a)>=0?e.a:e.b].l+" → " : "";
+      items.push('<li><i class="'+(op||"other")+'"></i><span><b>'+from+other.l+'</b> · '+typeName(e.t)+'. '+e.d+'<span class="src" title="'+e.src.replace(/"/g,"&quot;")+'">Source: '+pubSrc(e.src)+'</span></span></li>');
+    });
+    var poles={}; E.forEach(function(e){ if(e.t==="cap") return; var hit = set.indexOf(e.a)>=0 ? e.b : (set.indexOf(e.b)>=0 ? e.a : null); if(!hit) return; var q=poleOf(hit); if(q&&q!=="land") poles[q]=true; });
+    var pk=Object.keys(poles); var bridge = pk.length>1 ? '<p class="bridge">Sits between: '+pk.map(function(k){return {plan:"PLAN",ob:"Open Boulder",bb:"Better Boulder",bp:"Boulder Progressives"}[k];}).join(" · ")+'</p>' : '';
+    card.innerHTML='<h3>'+n.l+'</h3>'+(n.s?'<p class="sub">'+n.s+'</p>':'')+'<ul>'+items.join("")+'</ul>'+bridge;
+    var mw=document.getElementById("card"); if(mw.getBoundingClientRect().top>window.innerHeight-40){ mw.scrollIntoView({block:"nearest"}); }
+  }
+  function focusNode(id){
+    focused = (focused===id) ? null : id;
+    apply(); renderCard(focused);
+    document.querySelectorAll("#poleChips .chip").forEach(function(c){ c.setAttribute("aria-pressed", c.getAttribute("data-focus")===focused ? "true":"false"); });
+  }
+  document.querySelectorAll("#typeChips .chip").forEach(function(c){
+    c.addEventListener("click",function(){ typeFilter=c.getAttribute("data-type"); document.querySelectorAll("#typeChips .chip").forEach(function(x){x.setAttribute("aria-pressed",x===c?"true":"false");}); apply(); if(focused) renderCard(focused); });
+  });
+  document.querySelectorAll("#poleChips .chip").forEach(function(c){
+    c.addEventListener("click",function(){ var f=c.getAttribute("data-focus"); focused = f ? (focused===f?null:f) : null; apply(); renderCard(focused);
+      document.querySelectorAll("#poleChips .chip").forEach(function(x){ x.setAttribute("aria-pressed", x.getAttribute("data-focus")===focused && focused ? "true":"false"); }); });
+  });
+  apply();
+
+  // ---------- RANK ----------
+  var polesTouched=function(id){
+    var t={}; var nb={};
+    E.forEach(function(e){ if(e.a===id) nb[e.b]=true; if(e.b===id) nb[e.a]=true; });
+    Object.keys(nb).forEach(function(k){ var q=poleOf(k); if(q) t[q]=true;
+      var kn=byId[k]; if(kn.kind==="money"){ E.forEach(function(e){ var o=e.a===k?e.b:(e.b===k?e.a:null); if(o){ var q2=poleOf(o); if(q2) t[q2]=true; } }); }
+    });
+    return Object.keys(t);
+  };
+  var ranked=N.filter(function(n){return n.kind==="person";}).map(function(n){return {n:n,d:deg[n.id]};}).sort(function(a,b){return b.d-a.d||a.n.l.localeCompare(b.n.l);}).slice(0,10);
+  var hatsOf={BUDD:"BP co-founder · Better Boulder leadership since 2019, vice chair 2022 · 2E co-director · publishes a voter guide",BURTON:"Better Boulder co-founder · Open Boulder chair · chaired the 2025 committee · nine donor appearances",TOOR:"Better Boulder co-founder · One Boulder chair 2015 · Bedrooms donor 2021 · Energy Office",BENJAMIN:"Council · Open Boulder board 2020 · endorsed by both vehicles 2021 and 2025 · $5K to the AG committee",MCINTYRE:"Better Boulder chair · Open Boulder board 2020 · Planning Board",BECKER:"One Boulder first donor · Better Boulder board · ex-House Speaker · solar-industry CEO · OB auditor committee",DURGIN:"One Boulder secretary · Better Boulder board 2022 · Open Boulder board · ex-mayor",CARUSO:"Boulder Elevated · Engage Boulder · Safe Zones $3K · $50K to the AG committee",BROCKETT:"Mayor · ex-Better Boulder board · Polis endorsed 2023",GRANO:"Council 2017-19 · Neguse staff · BHP commissioner · BP 2026 slate · active broker",AIZENMAN:"Conscience Bay · Better Boulder board through Oct 2025 · OB donor 2025",MENEGHEL:"Chamber government affairs · Open Boulder secretary · One Boulder's paid organizer 2015",SCHULTHEISS:"Open Boulder director · from Polis's congressional office · One Boulder in-kind day one",MOREHOUSE:"One Boulder treasurer · business-moderate donor every cycle",YATES:"Two terms · Boulder Elevated 2023 · lost the mayoral race",ROBINS:"Council 2025 · Boulder Elevated 2023 · OB auditor committee",KAPLAN:"Council 2025 · OB and PLAN slate · commercial real estate",BRNCIC:"OB c3 board · 2023 candidate · Safe Zones co-lead",BEAN:"Element principal · Better Boulder board · All Roads secretary",MARTENS:"Ex-BHP director · Better Boulder board",PRANT:"Better Boulder co-chair 2019, chair 2022 · 2015 shell committee treasurer",HOTARD:"Realtor Association SVP · Better Boulder co-chair 2019",ESPINOZA:"Open Boulder founder · Better Boulder 2019 leadership · Budd ran her 2016 campaign",TAYER:"Chamber CEO · Better Boulder board",SPEAR:"Bank of Colorado · Chamber board · Better Boulder treasurer",JOSEPH:"Council 2019-23 · House District 10",LEVY:"County commissioner · rail district · $1,000 to the AG committee",FIVIAN:"Better Boulder board 2022 · BP board today",ROBINSON:"Open Boulder founder · c3 board · Open Space trustee · 2025 committee treasurer"};
+  var rank=document.getElementById("rank");
+  ranked.forEach(function(r){
+    var li=document.createElement("li");
+    var dots=polesTouched(r.n.id).map(function(p){return '<i class="'+p+'"></i>';}).join("");
+    li.innerHTML='<span class="n">'+r.d+'</span><span><span class="who" data-id="'+r.n.id+'">'+r.n.l+'</span><br><span class="hats">'+(hatsOf[r.n.id]||"")+'</span></span><span class="dots">'+dots+'</span>';
+    rank.appendChild(li);
+  });
+  rank.addEventListener("click",function(ev){ var w=ev.target.closest(".who"); if(!w) return; focused=null; focusNode(w.getAttribute("data-id")); document.getElementById("mapwrap").scrollIntoView({block:"start"}); });
+
+  // ---------- BRIDGES ----------
+  var pairs=[["BB","BP"],["OB","BB"],["OB","BP"],["OB","PLAN"],["LANDCELL","OB"],["LANDCELL","BB"],["LANDCELL","BP"],["PLAN","BP"]];
+  var poleLabel={PLAN:'<span class="pole plan"><i></i>PLAN</span>',OB:'<span class="pole ob"><i></i>Open Boulder</span>',BB:'<span class="pole bb"><i></i>Better Boulder</span>',BP:'<span class="pole bp"><i></i>Boulder Progressives</span>',LANDCELL:'<span class="pole land"><i></i>The land</span>'};
+  var tb=document.querySelector("#bridges tbody");
+  pairs.forEach(function(pr){
+    var A=pr[0]==="LANDCELL"?LANDCELL:[pr[0]], B=pr[1]==="LANDCELL"?LANDCELL:[pr[1]];
+    var direct=[]; E.forEach(function(e){ if((A.indexOf(e.a)>=0&&B.indexOf(e.b)>=0)||(A.indexOf(e.b)>=0&&B.indexOf(e.a)>=0)) direct.push(e); });
+    var nbA={}, nbB={};
+    E.forEach(function(e){ if(A.indexOf(e.a)>=0) nbA[e.b]=e; if(A.indexOf(e.b)>=0) nbA[e.a]=e; if(B.indexOf(e.a)>=0) nbB[e.b]=e; if(B.indexOf(e.b)>=0) nbB[e.a]=e; });
+    var bridges=[];
+    Object.keys(nbA).forEach(function(k){ if(nbB[k] && A.indexOf(k)<0 && B.indexOf(k)<0){ var capOnly=(nbA[k].t==="cap"||nbB[k].t==="cap"); bridges.push({k:k,cap:capOnly}); } });
+    bridges.sort(function(x,y){ return (x.cap-y.cap)||(deg[y.k]-deg[x.k]); });
+    var bl = bridges.length ? bridges.map(function(b){ return '<span class="who" data-id="'+b.k+'">'+byId[b.k].l+'</span>'+(b.cap?' <span class="mono" style="color:var(--muted)">($100)</span>':''); }).join(", ") : '<span style="color:var(--muted)">none on the record</span>';
+    var dl = direct.length ? direct.map(function(e){ return e.d; }).join(" ") : '<span style="color:var(--muted)">none</span>';
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td class="pair">'+poleLabel[pr[0]]+'<br>'+poleLabel[pr[1]]+'</td><td>'+dl+'</td><td>'+bl+'</td>';
+    tb.appendChild(tr);
+  });
+  tb.addEventListener("click",function(ev){ var w=ev.target.closest(".who"); if(!w) return; focused=null; focusNode(w.getAttribute("data-id")); document.getElementById("mapwrap").scrollIntoView({block:"start"}); });
+
+  // ---------- RENDER MODES (static exports) ----------
+  try{
+    var q=new URLSearchParams(location.search);
+    if(q.get("og")==="1"){ document.body.classList.add("og"); }
+    if(q.get("frame")==="1"){ document.body.classList.add("frame"); }
+  }catch(err){}
+})();
+</script>
+</body>
+</html>
