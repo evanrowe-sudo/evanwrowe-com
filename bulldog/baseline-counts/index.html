@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://evanwrowe.com/bulldog/baseline-counts/">
+<meta name="description" content="Cars, bus riders and bikes per day on Boulder's streets, from the city's own counters. The number the city prints as a percentage, set beside the cars.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="The Boulder Bulldog">
+<meta property="og:title" content="One Day on Boulder's Streets">
+<meta property="og:description" content="Cars, bus riders and bikes per day on Boulder's streets, from the city's own counters. The number the city prints as a percentage, set beside the cars.">
+<meta property="og:url" content="https://evanwrowe.com/bulldog/baseline-counts/">
+<meta property="og:image" content="https://evanwrowe.com/bulldog/baseline-counts/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One Day on Boulder's Streets">
+<meta name="twitter:description" content="Cars, bus riders and bikes per day on Boulder's streets, from the city's own counters. The number the city prints as a percentage, set beside the cars.">
+<meta name="twitter:image" content="https://evanwrowe.com/bulldog/baseline-counts/og.png">
+<title>One Day on Boulder's Streets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f9f9f6; --panel:#ffffff; --ink:#0f0f0e; --ink-2:#55544f; --ink-3:#8a897f;
+  --rule:#e3e2dc; --grid:#ebeae4; --band:#eef2f7;
+  --cars:#2a78d6; --bus:#eb6834; --bikes:#1baf7a; --bikes-ink:#0d7d55;
+  --focus:#2a78d6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#181816; --panel:#1f1f1c; --ink:#f4f3ee; --ink-2:#c3c2b7; --ink-3:#8f8e85;
+    --rule:#33332f; --grid:#2c2c29; --band:#232a33;
+    --cars:#3987e5; --bus:#d95926; --bikes:#199e70; --bikes-ink:#4fc79a;
+    --focus:#3987e5;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#181816; --panel:#1f1f1c; --ink:#f4f3ee; --ink-2:#c3c2b7; --ink-3:#8f8e85;
+  --rule:#33332f; --grid:#2c2c29; --band:#232a33;
+  --cars:#3987e5; --bus:#d95926; --bikes:#199e70; --bikes-ink:#4fc79a;
+  --focus:#3987e5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif;font-size:17px;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:28px 18px 56px}
+h1{font-family:"Barlow Semi Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(34px,7vw,46px);line-height:1;letter-spacing:-.01em;margin:0 0 10px;text-wrap:balance}
+.dek{color:var(--ink-2);font-size:17px;max-width:60ch;margin:0 0 26px}
+h2{font-family:"Barlow Semi Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:24px;line-height:1.1;margin:0 0 4px}
+.sub{color:var(--ink-2);font-size:15px;margin:0 0 14px;max-width:62ch}
+section{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:18px 16px 16px;margin:0 0 18px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:0 0 16px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.months{display:flex;gap:4px;flex-wrap:wrap}
+button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:4px;padding:5px 9px;min-width:34px;cursor:pointer;font-size:14px;line-height:1}
+button:hover{border-color:var(--ink-3)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.seg button{border:0;border-radius:0;min-width:0;padding:5px 11px}
+.seg button + button{border-left:1px solid var(--rule)}
+.rows{display:grid;gap:18px;margin:6px 0 10px}
+.row{display:grid;grid-template-columns:1fr;gap:5px}
+.lab{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.lab b{font-family:"Barlow Semi Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:21px;line-height:1}
+.lab span{color:var(--ink-2);font-size:14px}
+.track{position:relative;height:26px}
+.bar{position:absolute;left:0;top:7px;height:12px;border-radius:0 4px 4px 0;min-width:2px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.bar.cars{background:var(--cars)} .bar.bus{background:var(--bus)} .bar.bikes{background:var(--bikes)}
+.dot{position:absolute;top:8px;width:10px;height:10px;border-radius:50%;border:2px solid var(--panel);transform:translateX(-50%);display:none}
+.dot.bikes{background:var(--bikes)}
+.val{position:absolute;top:0;font-weight:600;font-size:19px;line-height:26px;white-space:nowrap;font-variant-numeric:tabular-nums;transition:left .5s cubic-bezier(.2,.8,.2,1)}
+.hit{position:absolute;inset:-6px 0;cursor:default}
+.axis{position:relative;height:18px;border-top:1px solid var(--rule);margin-top:4px;font-size:12px;color:var(--ink-3)}
+.axis span{position:absolute;top:2px;transform:translateX(-50%)}
+.axis span:first-child{transform:none}
+.grid{position:absolute;top:0;bottom:0;width:1px;background:var(--grid)}
+.ratio{margin:14px 0 0;font-size:17px}
+.ratio b{font-variant-numeric:tabular-nums}
+.tip{position:fixed;z-index:5;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.35;padding:7px 9px;border-radius:4px;max-width:260px;display:none}
+.tip b{display:block;font-size:14px}
+svg text{font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif}
+.chartwrap{overflow-x:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink-2);margin:6px 0 0}
+.legend i{display:inline-block;width:14px;height:10px;vertical-align:-1px;margin-right:5px;border-radius:2px}
+.note{font-size:14px;color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--rule)}
+th{font-weight:600;color:var(--ink-2);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+td.n,th.n{text-align:right}
+.tablewrap{overflow-x:auto;margin-top:12px}
+details summary{cursor:pointer;color:var(--ink-2);font-size:15px}
+footer{color:var(--ink-2);font-size:13.5px;line-height:1.5;max-width:66ch}
+footer p{margin:0 0 8px}
+@media (prefers-reduced-motion: reduce){.bar,.val{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>One Day on Boulder's Streets</h1>
+  <p class="dek">Cars, bus riders and bikes per day, from the city's own counters. The city publishes the bike number as a percentage change. Here it sits beside the cars.</p>
+
+  <section aria-labelledby="h-bars">
+    <h2 id="h-bars">Three counters, one day</h2>
+    <p class="sub">Cars and bikes are counted at one point each on Baseline Road. The bus figure is every rider boarding anywhere on the whole HOP line, which is generous to the bus.</p>
+    <div class="controls">
+      <span class="eyebrow">Bikes in</span>
+      <div class="months" id="months" role="group" aria-label="Choose a month of 2025"></div>
+      <div class="seg" role="group" aria-label="Days counted">
+        <button type="button" id="all" aria-pressed="true">All days</button>
+        <button type="button" id="twt" aria-pressed="false">Tue to Thu</button>
+      </div>
+    </div>
+    <div class="rows" id="rows">
+      <div class="row" data-k="cars">
+        <div class="lab"><b>Cars</b><span>one count point, Baseline Rd west of Canyon Creek, Tue to Thu, Sept 2025</span></div>
+        <div class="track"><div class="bar cars"></div><div class="val"></div><div class="hit" tabindex="0" aria-label="Cars: 24,800 vehicles per day"></div></div>
+      </div>
+      <div class="row" data-k="bus">
+        <div class="lab"><b>Bus riders</b><span>the whole HOP line, every stop, 2024 average</span></div>
+        <div class="track"><div class="bar bus"></div><div class="val"></div><div class="hit" tabindex="0" aria-label="Bus riders: 1,490 boardings per day"></div></div>
+      </div>
+      <div class="row" data-k="bikes">
+        <div class="lab"><b>Bikes</b><span id="bikesub">one count point, Baseline Rd at Inca Pkwy, both directions, 2025 average</span></div>
+        <div class="track"><div class="bar bikes"></div><div class="dot bikes"></div><div class="val"></div><div class="hit" tabindex="0" aria-label="Bikes per day"></div></div>
+      </div>
+    </div>
+    <div class="axis" id="axis"></div>
+    <p class="ratio" id="ratio"></p>
+  </section>
+
+  <section aria-labelledby="h-line">
+    <h2 id="h-line">The bike counter, month by month</h2>
+    <p class="sub">Average bikes per day at Baseline and Inca, both directions, March 2016 to August 2026, from the counter’s raw rows. The shaded windows are the two periods the city compared to get its 37.8 percent. The dashed lines are the averages inside them.</p>
+    <div class="chartwrap"><svg id="line" viewBox="0 0 680 300" width="100%" role="img" aria-labelledby="line-title"><title id="line-title">Monthly average bikes per day, 2016 to 2026</title></svg></div>
+    <div class="legend"><span><i style="background:var(--band);border:1px solid var(--rule)"></i>City's before and after windows</span><span><i style="background:var(--bikes)"></i>Bikes per day, monthly average</span></div>
+    <p class="note">The counter's before window averaged 134 a day and its after window 190, a rise of about 42 percent on the raw rows. The city's page says 37.8 percent and does not print either base. The counter was recording in 2019 too, when the road had ordinary painted lanes, at 181 a day.</p>
+  </section>
+
+  <section>
+    <details>
+      <summary>Show the numbers as a table</summary>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Month of 2025</th><th class="n">Bikes per day, all days</th><th class="n">Bikes per day, Tue to Thu</th><th class="n">Cars per bike, all days</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="note">Cars: 24,800 per day, one Tuesday to Thursday count, 18 September 2025. Bus: 1,490 boardings per day, HOP, 2024 average. A round trip counts twice on every one of these instruments.</p>
+    </details>
+  </section>
+
+  <footer>
+    <p><strong>Sources.</strong> City of Boulder Transportation and Mobility, programmatic traffic count service (Baseline Rd west of Canyon Creek Rd, ADT Tue to Thu, 18 Sept 2025; posted 35 mph, 85th percentile 32). City of Boulder bicycle counter services, Baseline and Inca eastbound and westbound, raw 15 minute and hourly rows summed by day, complete days only, one series per day where the 2026 services overlap. City of Boulder HOP fast facts, 2024 ridership 545,487, averaging 1,490 a day. City of Boulder Baseline Road Transportation Safety Project page for the 37.8 percent claim and its two windows.</p>
+    <p><strong>What this is not.</strong> A survey. The city's 2023 travel diary says residents make about 18 percent of their trips by bike and 4 percent by bus. Those are self-reported trips on every path and street in town. This page is what passed three counters.</p>
+    <p>Pulled and computed 14 September 2026.</p>
+  </footer>
+</div>
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var D = {"m2025":[66,111,166,203,190,225,232,278,328,285,199,101],"w2025":[79,103,188,239,179,230,246,303,354,318,227,103],"y_all":199,"y_w":214,"pre":134,"post":190};
+  D.series = [["2016-03",155,29],["2016-04",217,30],["2016-05",251,31],["2016-06",335,30],["2016-07",267,31],["2016-08",302,31],["2016-09",302,30],["2016-10",254,31],["2016-11",191,30],["2016-12",69,31],["2017-01",95,31],["2017-02",156,28],["2017-03",199,31],["2017-04",214,30],["2017-05",225,31],["2017-06",290,30],["2017-07",282,31],["2017-08",296,31],["2017-09",311,30],["2017-10",234,31],["2017-11",175,30],["2017-12",115,31],["2018-01",119,31],["2018-02",103,28],["2018-03",168,31],["2018-04",196,30],["2018-05",221,30],["2018-06",258,27],["2018-07",262,31],["2018-08",301,31],["2018-09",300,30],["2018-10",216,31],["2018-11",141,30],["2018-12",106,31],["2019-01",102,31],["2019-02",100,28],["2019-03",117,31],["2019-04",185,30],["2019-05",161,31],["2019-06",239,30],["2019-07",252,31],["2019-08",286,31],["2019-09",304,30],["2019-10",189,31],["2019-11",140,30],["2019-12",91,31],["2020-01",140,31],["2020-02",105,29],["2020-03",161,31],["2020-04",187,30],["2020-05",240,31],["2020-06",251,30],["2020-07",247,31],["2020-08",253,31],["2020-09",220,30],["2020-10",162,31],["2020-11",132,30],["2020-12",79,31],["2021-01",78,16],["2021-03",102,31],["2021-04",131,30],["2021-05",155,31],["2021-06",189,30],["2021-07",182,31],["2021-08",206,31],["2021-09",248,30],["2021-10",198,31],["2021-11",141,30],["2021-12",86,31],["2022-01",61,31],["2022-02",66,28],["2022-03",98,31],["2022-04",130,30],["2022-05",133,31],["2022-06",174,30],["2022-07",177,31],["2022-08",205,31],["2022-09",225,30],["2022-10",190,30],["2022-11",90,30],["2022-12",62,31],["2023-01",50,31],["2023-02",89,28],["2023-03",98,31],["2023-04",147,30],["2023-05",140,31],["2023-06",123,30],["2023-07",179,31],["2023-08",203,29],["2023-09",280,26],["2023-10",209,31],["2023-11",161,30],["2023-12",100,31],["2024-01",86,31],["2024-02",127,29],["2024-03",137,31],["2024-04",193,30],["2024-05",190,31],["2024-06",231,30],["2024-07",219,31],["2024-08",250,31],["2024-09",329,30],["2024-10",285,31],["2024-11",148,30],["2024-12",125,31],["2025-01",66,31],["2025-02",111,28],["2025-03",166,31],["2025-04",203,30],["2025-05",190,31],["2025-06",225,30],["2025-07",232,31],["2025-08",278,31],["2025-09",328,30],["2025-10",285,31],["2025-11",199,30],["2025-12",101,31],["2026-01",118,31],["2026-02",188,28],["2026-03",205,31],["2026-04",157,30],["2026-05",167,31],["2026-06",210,30],["2026-07",196,31],["2026-08",253,27]];
+  var CARS=24800, BUS=1490, MAX=27500;
+  var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var sel='year', twt=false;
+  var months=document.getElementById('months');
+  function mk(label,key){var b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.k=key;b.setAttribute('aria-pressed',key===sel?'true':'false');b.addEventListener('click',function(){sel=key;render();});months.appendChild(b);}
+  mk('Year','year'); MN.forEach(function(m,i){mk(m,String(i));});
+  document.getElementById('all').addEventListener('click',function(){twt=false;render();});
+  document.getElementById('twt').addEventListener('click',function(){twt=true;render();});
+  var axis=document.getElementById('axis');
+  [0,10000,20000].forEach(function(v){var g=document.createElement('div');g.className='grid';g.style.left=(v/MAX*100)+'%';axis.appendChild(g);var s=document.createElement('span');s.style.left=(v/MAX*100)+'%';s.textContent=v===0?'0':(v.toLocaleString()+(v===20000?' per day':''));axis.appendChild(s);});
+  function bikes(){ if(sel==='year') return twt?D.y_w:D.y_all; return (twt?D.w2025:D.m2025)[+sel]; }
+  function setBar(k,v,labelText){
+    var row=document.querySelector('.row[data-k="'+k+'"]');
+    var bar=row.querySelector('.bar'), val=row.querySelector('.val'), dot=row.querySelector('.dot'), hit=row.querySelector('.hit');
+    var pct=v/MAX*100; bar.style.width=pct+'%';
+    var lp=Math.max(pct,0)+1.2; val.style.left='calc('+lp+'% + 8px)'; val.textContent=v.toLocaleString();
+    if(dot){ dot.style.display='block'; dot.style.left=pct+'%'; }
+    hit.dataset.tip=labelText;
+  }
+  function render(){
+    months.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.k===sel?'true':'false');});
+    document.getElementById('all').setAttribute('aria-pressed',twt?'false':'true');
+    document.getElementById('twt').setAttribute('aria-pressed',twt?'true':'false');
+    var b=bikes();
+    var when = sel==='year' ? '2025 average' : MN[+sel]+' 2025 average';
+    var days = twt ? ', Tuesday to Thursday only' : '';
+    document.getElementById('bikesub').textContent='one count point, Baseline Rd at Inca Pkwy, both directions, '+when+days;
+    setBar('cars',CARS,'Cars: 24,800 vehicles a day. One count, Tuesday to Thursday, 18 September 2025, Baseline Rd west of Canyon Creek Rd.');
+    setBar('bus',BUS,'Bus: 1,490 boardings a day across the whole HOP line, 2024 average. A round trip counts twice.');
+    setBar('bikes',b,'Bikes: '+b+' a day at Baseline and Inca, both directions, '+when+days+'. A round trip counts twice.');
+    document.querySelector('.row[data-k="bikes"] .hit').setAttribute('aria-label','Bikes: '+b+' per day, '+when+days);
+    var r=Math.round(CARS/b);
+    document.getElementById('ratio').innerHTML='On the same road, about <b>'+r.toLocaleString()+' cars for every bike</b> in '+(sel==='year'?'2025':MN[+sel]+' 2025')+(twt?' on a Tuesday to Thursday':'')+'. The car count is a single September reading; car traffic varies far less by season than bikes do.';
+  }
+  // tooltip
+  var tip=document.getElementById('tip');
+  function show(e,t){tip.innerHTML=t;tip.style.display='block';move(e);}
+  function move(e){var x=(e.clientX||0)+14,y=(e.clientY||0)+14;var w=tip.offsetWidth,h=tip.offsetHeight;if(x+w>window.innerWidth-8)x=e.clientX-w-10;if(y+h>window.innerHeight-8)y=e.clientY-h-10;tip.style.left=x+'px';tip.style.top=y+'px';}
+  function hide(){tip.style.display='none';}
+  document.querySelectorAll('.hit').forEach(function(h){
+    h.addEventListener('mouseenter',function(e){show(e,h.dataset.tip);});
+    h.addEventListener('mousemove',move);
+    h.addEventListener('mouseleave',hide);
+    h.addEventListener('focus',function(){var r=h.getBoundingClientRect();show({clientX:r.left+20,clientY:r.top},h.dataset.tip);});
+    h.addEventListener('blur',hide);
+    h.addEventListener('click',function(e){if(tip.style.display==='block'&&tip.innerHTML===h.dataset.tip)hide();else show(e,h.dataset.tip);});
+  });
+  // table
+  var tb=document.getElementById('tbody');
+  MN.forEach(function(m,i){var tr=document.createElement('tr');tr.innerHTML='<td>'+m+'</td><td class="n">'+D.m2025[i]+'</td><td class="n">'+D.w2025[i]+'</td><td class="n">'+Math.round(CARS/D.m2025[i]).toLocaleString()+'</td>';tb.appendChild(tr);});
+  var trY=document.createElement('tr');trY.innerHTML='<td><strong>Year</strong></td><td class="n"><strong>'+D.y_all+'</strong></td><td class="n"><strong>'+D.y_w+'</strong></td><td class="n"><strong>'+Math.round(CARS/D.y_all)+'</strong></td>';tb.appendChild(trY);
+  render();
+
+  // line chart
+  var svg=document.getElementById('line'), NS='http://www.w3.org/2000/svg';
+  var W=680,H=300,L=44,R=14,T=16,B=34, YMAX=350;
+  var S=D.series, n=S.length;
+  function idx(ym){var y=+ym.slice(0,4),m=+ym.slice(5,7);return (y-2016)*12+(m-1);}
+  var i0=idx(S[0][0]), i1=idx(S[n-1][0]);
+  function X(i){return L+(i-i0)/(i1-i0)*(W-L-R);}
+  function Y(v){return T+(1-v/YMAX)*(H-T-B);}
+  function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a){if((k==='fill'||k==='stroke')&&String(a[k]).indexOf('var(')===0){e.style[k]=a[k];}else{e.setAttribute(k,a[k]);}}(p||svg).appendChild(e);return e;}
+  var cs=getComputedStyle(document.documentElement);
+  function tok(v){return 'var('+v+')';}
+  // bands
+  [['2021-09','2023-05'],['2023-12','2026-03']].forEach(function(b){var x0=X(idx(b[0])),x1=X(idx(b[1])+1);el('rect',{x:x0,y:T,width:x1-x0,height:H-T-B,fill:tok('--band')});});
+  // grid + y labels
+  [0,100,200,300].forEach(function(v){el('line',{x1:L,x2:W-R,y1:Y(v),y2:Y(v),stroke:tok('--grid'),'stroke-width':1});el('text',{x:L-6,y:Y(v)+4,'text-anchor':'end','font-size':11,fill:tok('--ink-3')}).textContent=v;});
+  el('text',{x:L-6,y:T-4,'text-anchor':'end','font-size':10,fill:tok('--ink-3')}).textContent='per day';
+  // x labels
+  for(var y=2016;y<=2026;y++){var i=(y-2016)*12;if(i<i0||i>i1)continue;el('line',{x1:X(i),x2:X(i),y1:H-B,y2:H-B+4,stroke:tok('--ink-3')});el('text',{x:X(i),y:H-B+16,'text-anchor':'middle','font-size':11,fill:tok('--ink-3')}).textContent=y;}
+  // reference averages
+  function ref(v,a,b,label){var x0=X(idx(a)),x1=X(idx(b)+1);el('line',{x1:x0,x2:x1,y1:Y(v),y2:Y(v),stroke:tok('--ink-2'),'stroke-width':1,'stroke-dasharray':'3 3'});el('text',{x:x0+4,y:Y(v)-5,'font-size':11,fill:tok('--ink-2')}).textContent=label;}
+  ref(D.pre,'2021-09','2023-05','before: 134 a day'); ref(D.post,'2023-12','2026-03','after: 190 a day');
+  // path
+  var dstr='';S.forEach(function(p,k){var x=X(idx(p[0])),yv=Y(p[1]);dstr+=(k?'L':'M')+x.toFixed(1)+' '+yv.toFixed(1)+' ';});
+  el('path',{d:dstr,fill:'none',stroke:tok('--bikes'),'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'});
+  // endpoint
+  var last=S[n-1];el('circle',{cx:X(idx(last[0])),cy:Y(last[1]),r:4,fill:tok('--bikes'),stroke:tok('--panel'),'stroke-width':2});
+  el('text',{x:X(idx(last[0]))-6,y:Y(last[1])-8,'text-anchor':'end','font-size':11,fill:tok('--ink')}).textContent=last[1]+' in '+MN[+last[0].slice(5,7)-1]+' '+last[0].slice(0,4);
+  // crosshair
+  var cx=el('line',{x1:0,x2:0,y1:T,y2:H-B,stroke:tok('--ink-3'),'stroke-width':1,opacity:0});
+  var cd=el('circle',{cx:0,cy:0,r:4.5,fill:tok('--bikes'),stroke:tok('--panel'),'stroke-width':2,opacity:0});
+  var hit=el('rect',{x:L,y:T,width:W-L-R,height:H-T-B,fill:'transparent'});
+  function near(px){var best=0,bd=1e9;S.forEach(function(p,k){var d=Math.abs(X(idx(p[0]))-px);if(d<bd){bd=d;best=k;}});return best;}
+  function pt(e){var r=svg.getBoundingClientRect();return (e.clientX-r.left)*W/r.width;}
+  hit.addEventListener('mousemove',function(e){var k=near(pt(e));var p=S[k];var x=X(idx(p[0])),yv=Y(p[1]);cx.setAttribute('x1',x);cx.setAttribute('x2',x);cx.setAttribute('opacity',1);cd.setAttribute('cx',x);cd.setAttribute('cy',yv);cd.setAttribute('opacity',1);show(e,'<b>'+p[1]+' bikes a day</b>'+MN[+p[0].slice(5,7)-1]+' '+p[0].slice(0,4)+', average of '+p[2]+' complete days');});
+  hit.addEventListener('mouseleave',function(){cx.setAttribute('opacity',0);cd.setAttribute('opacity',0);hide();});
+  hit.addEventListener('click',function(e){var k=near(pt(e));var p=S[k];show(e,'<b>'+p[1]+' bikes a day</b>'+MN[+p[0].slice(5,7)-1]+' '+p[0].slice(0,4));});
+})();
+</script>
+</body>
+</html>
