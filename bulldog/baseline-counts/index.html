@@ -78,8 +78,9 @@ button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .axis span{position:absolute;top:2px;transform:translateX(-50%)}
 .axis span:first-child{transform:none}
 .grid{position:absolute;top:0;bottom:0;width:1px;background:var(--grid)}
-.ratio{margin:14px 0 0;font-size:17px}
-.ratio b{font-variant-numeric:tabular-nums}
+.ratio{margin:16px 0 0;font-size:16px;color:var(--ink-2)}
+.ratio .big{display:block;font-family:"Barlow Semi Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:clamp(30px,6vw,40px);line-height:1.05;color:var(--ink);margin:0 0 4px;transition:opacity .25s}
+.ratio .big span{font-variant-numeric:tabular-nums}
 .tip{position:fixed;z-index:5;pointer-events:none;background:var(--ink);color:var(--bg);font-size:13px;line-height:1.35;padding:7px 9px;border-radius:4px;max-width:260px;display:none}
 .tip b{display:block;font-size:14px}
 svg text{font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif}
@@ -197,7 +198,7 @@ footer p{margin:0 0 8px}
     setBar('bikes',b,'Bikes: '+b+' a day at Baseline and Inca, both directions, '+when+days+'. A round trip counts twice.');
     document.querySelector('.row[data-k="bikes"] .hit').setAttribute('aria-label','Bikes: '+b+' per day, '+when+days);
     var r=Math.round(CARS/b);
-    document.getElementById('ratio').innerHTML='On the same road, about <b>'+r.toLocaleString()+' cars for every bike</b> in '+(sel==='year'?'2025':MN[+sel]+' 2025')+(twt?' on a Tuesday to Thursday':'')+'. The car count is a single September reading; car traffic varies far less by season than bikes do.';
+    document.getElementById('ratio').innerHTML='<b class="big"><span>'+r.toLocaleString()+'</span> cars for every bike</b>On the same road, in '+(sel==='year'?'2025':MN[+sel]+' 2025')+(twt?' on a Tuesday to Thursday':'')+'. The car count is a single September reading; car traffic varies far less by season than bikes do.';
   }
   // tooltip
   var tip=document.getElementById('tip');
