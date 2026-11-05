@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>NHV · Thu Nov 5</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #181b22; --ink: #f2f2f0; --muted: #a3a8b3;
+    --accent: #f0b429; --line: #2a2f3a; --btn: #23272f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 20px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 20px; }
+  .kicker { color: var(--accent); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 15px; }
+  h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.08; margin: 6px 0 10px; }
+  h2 { font-size: clamp(24px, 3vw, 34px); margin: 48px 0 8px; }
+  .sub { color: var(--muted); margin: 0; font-size: 22px; }
+  a { color: var(--accent); }
+
+  .today { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  .today li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+              padding: 6px 16px 6px 8px; font-size: 18px; }
+  .today li::before { content: counter(s); display: inline-block; width: 26px; height: 26px; line-height: 26px;
+              text-align: center; border-radius: 50%; background: var(--accent); color: #111; font-weight: 800;
+              margin-right: 8px; font-size: 15px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; font-size: 21px; }
+  .card h3 { margin: 0 0 6px; color: var(--accent); font-size: 24px; }
+
+  .clip { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; margin: 18px 0; overflow: hidden; }
+  .clip-head { padding: 16px 18px 4px; }
+  .clip-title { font-weight: 800; font-size: 26px; display: block; }
+  .clip-src { color: var(--muted); font-size: 17px; }
+  .range { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .clip-note { padding: 4px 18px 0; font-size: 20px; color: #d9dbe0; }
+  .player { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .facade { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; cursor: pointer;
+            background: #000 center / cover no-repeat; }
+  .facade::after { content: "▶"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: 104px; height: 72px; border-radius: 16px; background: rgba(0,0,0,.72); color: #fff;
+            font-size: 38px; line-height: 72px; text-align: center; }
+  .facade:hover::after { background: #c00; }
+  .tools { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 18px 16px; font-size: 16px; }
+  .tools button, .tools a { background: var(--btn); color: var(--ink); border: 1px solid var(--line);
+            border-radius: 8px; padding: 6px 12px; font: inherit; cursor: pointer; text-decoration: none; }
+  .tools button:hover, .tools a:hover { border-color: var(--accent); }
+
+  .callout { background: var(--panel); border-left: 4px solid var(--accent); padding: 16px 18px; border-radius: 8px; font-size: 22px; }
+  ol.qs { padding-left: 1.4em; font-size: 23px; }
+  ol.qs li { margin: 0 0 16px; }
+  ol.qs strong { color: var(--accent); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .steps .card h3::before { color: var(--muted); font-weight: 600; margin-right: 6px; }
+  .note { color: var(--muted); font-size: 15px; margin-top: 40px; }
+  @media (max-width: 600px) { body { font-size: 18px; } .card, .callout, ol.qs { font-size: 19px; } }
+  .headline { max-width: 760px; width: 100%; border-radius: 12px; display: block; margin: 14px 0 6px; }
+  .big { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; line-height: 1.2; }
+  blockquote { margin: 14px 0 0; padding: 0 0 0 16px; border-left: 4px solid var(--accent); font-size: 23px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">NHV · Nature and Human Values · Thu Nov 5</div>
+    <h1>Who paid, who won</h1>
+    <p class="sub">Elections are when business blocs regroup. The markets price the new lineup overnight.</p>
+  </header>
+
+  <ul class="today">
+    <li>The headline</li>
+    <li>CBS clip</li>
+    <li>Oil</li>
+    <li>Hospitals</li>
+    <li>AI</li>
+    <li>Questions</li>
+    <li>Exit ticket</li>
+  </ul>
+
+  <h2>The day after: Wall Street Journal, Nov 4</h2>
+  <img class="headline" src="wsj-headline.jpg" alt="Wall Street Journal headline: The Blue Wave Sets Off a Potential Regime Change in Markets. U.S. stock indexes surge on hope that legislative gridlock, an AI slowdown and checks on presidential power will mark the start of a new era for the economy.">
+  <p class="sub">Read the subhead again: <strong>&ldquo;an AI slowdown.&rdquo;</strong> Hold onto that.</p>
+
+  <h2>Clip: the market the morning after</h2>
+  <div class="clip" data-id="cekMYubSeT4" data-start="0">
+    <div class="clip-head">
+      <span class="clip-title">Stock market surges after Democrats&rsquo; midterm wins</span>
+      <span class="clip-src">CBS Mornings · Nov 4 · 2:41 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">Write down every industry she names. Who won? Who lost?</div>
+  </div>
+
+  <h2>Who paid, who won</h2>
+  <p class="sub">Stock moves: Nov 4 close vs. Nov 3 close.</p>
+  <div class="cards" style="margin-top:14px">
+    <div class="card"><h3>Oil &amp; gas</h3>Gave <strong>97%</strong> of its <strong>$188 million</strong> in federal campaign money to Republicans. Republicans lost both chambers. Next day, U.S. crude oil fell <strong>8.4%</strong>.</div>
+    <div class="card"><h3>Hospitals</h3>Gave to incumbents in <strong>both</strong> parties. Next day: HCA <strong>+10%</strong>, Centene <strong>+13%</strong>. Their revenue runs on Medicaid.</div>
+    <div class="card"><h3>AI</h3>Companies that <strong>sell</strong> computing power fell (Nvidia &minus;3%, CoreWeave &minus;10%). Companies that <strong>buy</strong> it rose (Apple +5%, Microsoft +7%, Amazon +6%).</div>
+  </div>
+
+  <h2>AI: safety, or a price floor?</h2>
+  <div class="callout">
+    <span class="big">September 2026: OpenAI and Anthropic called for the AI industry to slow down. Together.</span><br><br>
+    Anthropic&rsquo;s CEO asked Washington for an antitrust waiver, permission for competitors to coordinate. If every lab slows down at once, nobody has to cut prices.<br><br>
+    The White House said no:
+    <blockquote>&ldquo;Stop pretending antitrust law has to be suspended so you can form a cartel.&rdquo;<br><span class="clip-src">David Sacks, co-chair of the President&rsquo;s Council of Advisors on Science and Technology</span></blockquote>
+  </div>
+  <p class="sub" style="margin-top:14px">Background: <a href="https://evanwrowe.substack.com/p/an-ai-slowdown-is-a-price-floor" target="_blank" rel="noopener">The AI &ldquo;Slowdown&rdquo; is more complicated than AI &ldquo;Safety&rdquo;</a></p>
+
+  <h2>Questions</h2>
+  <ol class="qs">
+    <li><strong>Hedging.</strong> Defense contractors gave to both parties, and their stocks fell anyway. Is giving to both sides insurance or bribery?</li>
+    <li><strong>Safety or price floor?</strong> When AI companies ask to slow down together, is that safety, a cartel, or both?</li>
+    <li><strong>Who decides where AI gets built?</strong> The town, the state, or Congress? Who pays the power bill?</li>
+    <li><strong>The market as a voter.</strong> The Dow had its best day after a midterm since 1982. Whose vote is that?</li>
+  </ol>
+
+  <h2>Exit ticket</h2>
+  <div class="callout"><span class="big">Pick one bloc. What did its money buy?</span><br>One sentence, on paper, before you leave.</div>
+
+  <h2>Tonight</h2>
+  <div class="callout"><strong>Punya Mishra on AI and leadership</strong> · 5&ndash;6 pm · Coolbaugh 209<br>Counts for your Outside Event Report. Bring question 2 with you.</div>
+
+  <h2>Extra: winners and losers</h2>
+  <div class="clip" data-id="kAyAZX7PKFA" data-start="64">
+    <div class="clip-head">
+      <span class="clip-title">Midterm market reaction: Who are the winners and losers?</span>
+      <span class="clip-src">ABC News (Australia) · Nov 4 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">Defense, oil, wind and solar, and Elon Musk.</div>
+  </div>
+
+  <p class="note">Full videos: <a href="https://www.youtube.com/watch?v=cekMYubSeT4" target="_blank" rel="noopener">CBS Mornings</a> · <a href="https://www.youtube.com/watch?v=kAyAZX7PKFA" target="_blank" rel="noopener">ABC News (Australia)</a> · <a href="https://www.wsj.com/politics/elections/the-winners-and-losers-on-wall-street-from-the-election-earthquake-55ff9cd4" target="_blank" rel="noopener">WSJ: winners and losers</a>. Campaign money: OpenSecrets, via HEATED.</p>
+</main>
+
+<script>
+  function fmt(s) { var m = Math.floor(s / 60), r = s % 60; return m + ":" + (r < 10 ? "0" : "") + r; }
+  document.querySelectorAll(".clip").forEach(function (clip) {
+    var id = clip.dataset.id, start = +(clip.dataset.start || 0), end = clip.dataset.end ? +clip.dataset.end : null;
+    clip.querySelector(".range").textContent = end ? fmt(start) + "–" + fmt(end) : (start ? "starts at " + fmt(start) : "from the top");
+    var player = document.createElement("div");
+    player.className = "player";
+    var facade = document.createElement("button");
+    facade.className = "facade";
+    facade.setAttribute("aria-label", "Play clip");
+    facade.style.backgroundImage = "url(https://i.ytimg.com/vi/" + id + "/hqdefault.jpg)";
+    player.appendChild(facade);
+    clip.insertBefore(player, clip.querySelector(".clip-head"));
+    function load() {
+      player.innerHTML = '<iframe allow="autoplay; encrypted-media; fullscreen" allowfullscreen ' +
+        'src="https://www.youtube-nocookie.com/embed/' + id + '?start=' + start + (end ? '&end=' + end : '') +
+        '&autoplay=1&rel=0&modestbranding=1"></iframe>';
+    }
+    facade.addEventListener("click", load);
+    var tools = document.createElement("div");
+    tools.className = "tools";
+    tools.innerHTML = '<button type="button">↺ Restart clip</button>' +
+      '<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=' + id + (start ? '&t=' + start + 's' : '') + '">Open on YouTube</a>';
+    tools.querySelector("button").addEventListener("click", load);
+    clip.appendChild(tools);
+  });
+</script>
+</body>
+</html>
