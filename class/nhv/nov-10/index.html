@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>NHV · Tue Nov 10</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #181b22; --ink: #f2f2f0; --muted: #a3a8b3;
+    --accent: #f0b429; --line: #2a2f3a; --btn: #23272f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 20px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 20px; }
+  .kicker { color: var(--accent); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 15px; }
+  h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.08; margin: 6px 0 10px; }
+  h2 { font-size: clamp(24px, 3vw, 34px); margin: 48px 0 8px; }
+  .sub { color: var(--muted); margin: 0; font-size: 22px; }
+  a { color: var(--accent); }
+
+  .today { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  .today li { counter-increment: s; background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+              padding: 6px 16px 6px 8px; font-size: 18px; }
+  .today li::before { content: counter(s); display: inline-block; width: 26px; height: 26px; line-height: 26px;
+              text-align: center; border-radius: 50%; background: var(--accent); color: #111; font-weight: 800;
+              margin-right: 8px; font-size: 15px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; font-size: 21px; }
+  .card h3 { margin: 0 0 6px; color: var(--accent); font-size: 24px; }
+
+  .clip { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; margin: 18px 0; overflow: hidden; }
+  .clip-head { padding: 16px 18px 4px; }
+  .clip-title { font-weight: 800; font-size: 26px; display: block; }
+  .clip-src { color: var(--muted); font-size: 17px; }
+  .range { color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .clip-note { padding: 4px 18px 0; font-size: 20px; color: #d9dbe0; }
+  .player { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .facade { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; cursor: pointer;
+            background: #000 center / cover no-repeat; }
+  .facade::after { content: "▶"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            width: 104px; height: 72px; border-radius: 16px; background: rgba(0,0,0,.72); color: #fff;
+            font-size: 38px; line-height: 72px; text-align: center; }
+  .facade:hover::after { background: #c00; }
+  .tools { display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 18px 16px; font-size: 16px; }
+  .tools button, .tools a { background: var(--btn); color: var(--ink); border: 1px solid var(--line);
+            border-radius: 8px; padding: 6px 12px; font: inherit; cursor: pointer; text-decoration: none; }
+  .tools button:hover, .tools a:hover { border-color: var(--accent); }
+
+  .callout { background: var(--panel); border-left: 4px solid var(--accent); padding: 16px 18px; border-radius: 8px; font-size: 22px; }
+  ol.qs { padding-left: 1.4em; font-size: 23px; }
+  ol.qs li { margin: 0 0 16px; }
+  ol.qs strong { color: var(--accent); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .steps .card h3::before { color: var(--muted); font-weight: 600; margin-right: 6px; }
+  .note { color: var(--muted); font-size: 15px; margin-top: 40px; }
+  @media (max-width: 600px) { body { font-size: 18px; } .card, .callout, ol.qs { font-size: 19px; } }
+  .headline { max-width: 760px; width: 100%; border-radius: 12px; display: block; margin: 14px 0 6px; }
+  .big { font-size: clamp(26px, 3.4vw, 40px); font-weight: 800; line-height: 1.2; }
+  blockquote { margin: 14px 0 0; padding: 0 0 0 16px; border-left: 4px solid var(--accent); font-size: 23px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">NHV · Nature and Human Values · Tue Nov 10</div>
+    <h1>How the bill arrives</h1>
+    <p class="sub">An expensive barrel of oil does not arrive as a blackout. It arrives as a bill. Who gets it, and did they choose anything?</p>
+  </header>
+
+  <ul class="today">
+    <li>The chokepoint</li>
+    <li>The Gulf</li>
+    <li>Who gets squeezed</li>
+    <li>The AI power bill</li>
+    <li>Colorado</li>
+    <li>Exit ticket</li>
+  </ul>
+
+  <h2>1. The chokepoint</h2>
+  <div class="clip" data-id="UIhv0n5bK3A" data-start="0">
+    <div class="clip-head">
+      <span class="clip-title">How the Strait of Hormuz moves oil prices</span>
+      <span class="clip-src">CBS Mornings · Mar 10, 2026 · 2:25 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">One narrow strait. Follow the price from the tanker to the gas pump. Who along that chain can pass the cost on, and who can&rsquo;t?</div>
+  </div>
+
+  <h2>2. The Gulf: Ayham Kamel, Eurasia Group</h2>
+  <p class="sub">CSIS &ldquo;Babel&rdquo; podcast, April 2023. Four short cuts. Caption times, &plusmn;10 seconds.</p>
+  <div class="clip" data-id="-60xuxbRpyI" data-start="290" data-end="370">
+    <div class="clip-head">
+      <span class="clip-title">Oil importers get squeezed</span>
+      <span class="clip-src">CSIS · Apr 2023 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">Egypt, Jordan, Lebanon pay more for oil <em>and</em> food, can&rsquo;t borrow, and the Gulf is done handing out easy money. Who in those countries pays?</div>
+  </div>
+  <div class="clip" data-id="-60xuxbRpyI" data-start="735" data-end="822">
+    <div class="clip-head">
+      <span class="clip-title">The seeds of another Arab Spring</span>
+      <span class="clip-src">CSIS · Apr 2023 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">Hit by COVID, hit by the war in Ukraine, can&rsquo;t borrow. When the bill gets big enough, it turns into a street protest.</div>
+  </div>
+  <div class="clip" data-id="-60xuxbRpyI" data-start="1190" data-end="1272">
+    <div class="clip-head">
+      <span class="clip-title">&ldquo;They were not asked&rdquo;</span>
+      <span class="clip-src">CSIS · Apr 2023 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">Gulf citizens never voted on the energy transition. When it hurts, who gets blamed? Listen for the foreign workers.</div>
+  </div>
+  <div class="clip" data-id="-60xuxbRpyI" data-start="1600" data-end="1645">
+    <div class="clip-head">
+      <span class="clip-title">Saudi Arabia needs about $76 a barrel</span>
+      <span class="clip-src">CSIS · Apr 2023 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">The seller needs a high price to balance its own budget. That high price is someone else&rsquo;s bill.</div>
+  </div>
+
+  <h2>3. Closer to home: the AI power bill</h2>
+  <div class="clip" data-id="_Ird91qfPZs" data-start="0">
+    <div class="clip-head">
+      <span class="clip-title">Data centers powering AI push up utility bills</span>
+      <span class="clip-src">ABC News · Feb 18, 2026 · 4:05 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">Who gets the AI? Who gets the power bill? Are they the same people?</div>
+  </div>
+  <div class="clip" data-id="v4rJyAJxdzo" data-start="0">
+    <div class="clip-head">
+      <span class="clip-title">Coloradans protest data centers over utility costs</span>
+      <span class="clip-src">CBS Colorado · Oct 21, 2026 · 1:12 · <span class="range"></span></span>
+    </div>
+    <div class="clip-note">This one is here. What are they actually able to do about it?</div>
+  </div>
+
+  <h2>Talk it through</h2>
+  <ol class="qs">
+    <li><strong>The bill.</strong> Pick one person in today&rsquo;s clips who pays more. Did they choose anything?</li>
+    <li><strong>The seller.</strong> Saudi Arabia needs a high price to pay its own bills. Is it wrong to want that?</li>
+    <li><strong>The vote.</strong> Gulf citizens were not asked. Colorado residents can show up to a hearing. Does that change who pays?</li>
+  </ol>
+
+  <h2>Exit ticket</h2>
+  <div class="callout"><span class="big">One sentence, on paper: name one person who gets the energy bill. Did they choose it?</span></div>
+
+  <h2>Thursday</h2>
+  <div class="callout">Read &ldquo;Friction Is the Weapon&rdquo; (about 2,800 words, free): <a href="https://evanwrowe.substack.com/p/friction-is-the-weapon">evanwrowe.substack.com/p/friction-is-the-weapon</a>. Thursday is about who controls the gate.</div>
+
+  <p class="note">Clip times are from auto-captions and may be off by about 10 seconds.</p>
+</main>
+<script>
+  function fmt(s) { var m = Math.floor(s / 60), r = s % 60; return m + ":" + (r < 10 ? "0" : "") + r; }
+  document.querySelectorAll(".clip").forEach(function (clip) {
+    var id = clip.dataset.id, start = +(clip.dataset.start || 0), end = clip.dataset.end ? +clip.dataset.end : null;
+    clip.querySelector(".range").textContent = end ? fmt(start) + "–" + fmt(end) : (start ? "starts at " + fmt(start) : "from the top");
+    var player = document.createElement("div");
+    player.className = "player";
+    var facade = document.createElement("button");
+    facade.className = "facade";
+    facade.setAttribute("aria-label", "Play clip");
+    facade.style.backgroundImage = "url(https://i.ytimg.com/vi/" + id + "/hqdefault.jpg)";
+    player.appendChild(facade);
+    clip.insertBefore(player, clip.querySelector(".clip-head"));
+    function load() {
+      player.innerHTML = '<iframe allow="autoplay; encrypted-media; fullscreen" allowfullscreen ' +
+        'src="https://www.youtube-nocookie.com/embed/' + id + '?start=' + start + (end ? '&end=' + end : '') +
+        '&autoplay=1&rel=0&modestbranding=1"></iframe>';
+    }
+    facade.addEventListener("click", load);
+    var tools = document.createElement("div");
+    tools.className = "tools";
+    tools.innerHTML = '<button type="button">↺ Restart clip</button>' +
+      '<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=' + id + (start ? '&t=' + start + 's' : '') + '">Open on YouTube</a>';
+    tools.querySelector("button").addEventListener("click", load);
+    clip.appendChild(tools);
+  });
+</script>
+</body>
+</html>
