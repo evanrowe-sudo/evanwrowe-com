@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>NHV · Tue Nov 17</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #181b22; --ink: #f2f2f0; --muted: #a3a8b3;
+    --accent: #f0b429; --line: #2a2f3a; --btn: #23272f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 20px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 18px; margin-bottom: 20px; }
+  .kicker { color: var(--accent); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 15px; }
+  h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.08; margin: 6px 0 10px; }
+  h2 { font-size: clamp(24px, 3vw, 34px); margin: 48px 0 8px; }
+  .sub { color: var(--muted); margin: 0; font-size: 22px; }
+  a { color: var(--accent); }
+
+  .stage { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+  .stage #yt { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .card-over { position: absolute; inset: 0; background: #0e0e12; display: flex; flex-direction: column;
+               justify-content: center; padding: 6% 8%; z-index: 2; }
+  .card-over[hidden] { display: none; }
+  .card-over .n { color: var(--accent); font-weight: 800; font-size: clamp(18px, 2.4vw, 30px); }
+  .card-over .t { font-weight: 800; font-size: clamp(26px, 4.2vw, 54px); line-height: 1.15; margin: 10px 0 14px; }
+  .card-over .s { color: var(--muted); font-size: clamp(14px, 1.6vw, 22px); }
+  .card-over button.go { align-self: flex-start; margin-top: 26px; background: var(--accent); color: #111; border: 0;
+               border-radius: 12px; padding: 14px 26px; font: 800 22px system-ui, sans-serif; cursor: pointer; }
+
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 0; font-size: 17px; }
+  .bar button { background: var(--btn); color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
+                padding: 8px 14px; font: inherit; cursor: pointer; }
+  .bar button:hover { border-color: var(--accent); }
+  .bar .now { color: var(--muted); margin-left: auto; }
+
+  ol.segs { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 8px; }
+  ol.segs li { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px;
+               cursor: pointer; display: flex; gap: 12px; align-items: baseline; font-size: 19px; }
+  ol.segs li:hover { border-color: var(--accent); }
+  ol.segs li.on { border-color: var(--accent); background: #22201a; }
+  ol.segs .k { color: var(--accent); font-weight: 800; min-width: 1.6em; }
+  ol.segs .m { color: var(--muted); font-size: 15px; margin-left: auto; white-space: nowrap; }
+
+  .callout { background: var(--panel); border-left: 4px solid var(--accent); padding: 16px 18px; border-radius: 8px; font-size: 22px; }
+  ol.qs { padding-left: 1.4em; font-size: 23px; }
+  ol.qs li { margin: 0 0 16px; }
+  .note { color: var(--muted); font-size: 15px; margin-top: 40px; }
+  @media (max-width: 600px) { body { font-size: 18px; } ol.qs, .callout { font-size: 19px; } ol.segs li { font-size: 17px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">NHV · Nature and Human Values · Tue Nov 17</div>
+    <h1>Race and class: no politics but class politics</h1>
+    <p class="sub">Walter Benn Michaels and Adolph Reed Jr., in nine pieces that play one after another.</p>
+  </header>
+
+  <div class="stage">
+    <div id="yt"></div>
+    <div class="card-over" id="card">
+      <div class="n" id="cn">9 segments · about 43 minutes</div>
+      <div class="t" id="ct">Race and class</div>
+      <div class="s" id="cs">Plays straight through. Pause any time.</div>
+      <button class="go" id="go" type="button">▶ Play from the start</button>
+    </div>
+  </div>
+  <div class="bar">
+    <button type="button" id="prev">⏮ Previous</button>
+    <button type="button" id="next">Next ⏭</button>
+    <button type="button" id="restart">↺ Restart this piece</button>
+    <span class="now" id="now"></span>
+  </div>
+
+  <ol class="segs" id="segs"></ol>
+
+  <h2>Questions</h2>
+  <ol class="qs">
+    <li>Michaels says calling race a social construction does not fix the mistake. What is the mistake?</li>
+    <li>If the Jim Crow rules changed from town to town, who were the rules really built to control?</li>
+    <li>Suppose every bit of discrimination ended tomorrow. Who would still be at the bottom?</li>
+    <li>Colleges track the race of who they admit. Why don&rsquo;t they make the same promise about income?</li>
+    <li>A laid-off white nurse: where is her share of &ldquo;white wealth&rdquo;? So what is the wealth gap measuring?</li>
+    <li>Two workers earn the same wage, and both are below the poverty line. Is closing the gap between them justice?</li>
+  </ol>
+  <div class="callout">Who gains when a problem is described by race instead of by class?</div>
+
+  <p class="note">Sources: Columbia Club of DC panel, &ldquo;Race vs Class: No Politics but Class Politics&rdquo; (Walter Benn Michaels and Adolph Reed Jr., host Lily Jamali) and
+  &ldquo;Adolph Reed Jr: Race, Class and Capitalism,&rdquo; Doomscroll with Joshua Citarella (Oct. 28, 2026). Start and end times come from auto-captions and may be off by 10 to 15 seconds.</p>
+</main>
+<script>
+  var M = "nJ4Hm1ehoX4", D = "fkLCChtlPvQ";
+  var MS = "Columbia Club of DC panel: Walter Benn Michaels and Adolph Reed Jr.";
+  var DS = "Doomscroll with Joshua Citarella: Adolph Reed Jr.";
+  function s(t) { var p = t.split(":").map(Number); return p.length === 3 ? p[0]*3600 + p[1]*60 + p[2] : p[0]*60 + p[1]; }
+  var SEGS = [
+    [M, "10:58", "13:55", "Race is not biology, and not a “social construction.” It is a mistake.", MS],
+    [M, "19:58", "24:58", "Jim Crow was about economics: the pickpocket’s dodge", MS],
+    [D, "1:41:15", "1:47:15", "The Jim Crow rules changed from town to town", DS],
+    [D, "1:23:00", "1:30:00", "Who counts as white? Then: Victorian race science, aimed at workers", DS],
+    [M, "24:50", "29:55", "End all discrimination, and the gap between rich and poor stays the same", MS],
+    [M, "30:55", "35:30", "Columbia: 62% of students from the richest fifth", MS],
+    [M, "43:10", "48:10", "Who actually holds “white wealth”?", MS],
+    [M, "51:50", "56:05", "Make the bad jobs good jobs", MS],
+    [D, "2:45:55", "2:48:55", "Was the New Deal racist?", DS]
+  ].map(function (x) { return { id: x[0], a: s(x[1]), b: s(x[2]), from: x[1], to: x[2], title: x[3], src: x[4] }; });
+
+  var list = document.getElementById("segs"), card = document.getElementById("card");
+  SEGS.forEach(function (g, i) {
+    var li = document.createElement("li");
+    li.innerHTML = '<span class="k">' + (i + 1) + '</span><span>' + g.title + '</span><span class="m">' +
+      Math.round((g.b - g.a) / 60) + ' min · ' + (g.id === M ? "Columbia panel " : "Doomscroll ") + g.from + '</span>';
+    li.addEventListener("click", function () { cue(i); });
+    list.appendChild(li);
+  });
+
+  var player, cur = -1, timer = null;
+  function mark() {
+    [].forEach.call(list.children, function (li, i) { li.classList.toggle("on", i === cur); });
+    document.getElementById("now").textContent = cur >= 0 ? "Playing " + (cur + 1) + " of " + SEGS.length : "";
+  }
+  function showCard(i) {
+    var g = SEGS[i];
+    document.getElementById("cn").textContent = (i + 1) + " of " + SEGS.length;
+    document.getElementById("ct").textContent = g.title;
+    document.getElementById("cs").textContent = g.src;
+    document.getElementById("go").hidden = true;
+    card.hidden = false;
+  }
+  function play(i) {
+    card.hidden = true;
+    var g = SEGS[i];
+    player.loadVideoById({ videoId: g.id, startSeconds: g.a, endSeconds: g.b });
+  }
+  function cue(i) {
+    if (i < 0 || i >= SEGS.length || !player) return;
+    clearTimeout(timer); cur = i; mark();
+    if (player.pauseVideo) player.pauseVideo();
+    showCard(i);
+    timer = setTimeout(function () { play(i); }, 3500);
+  }
+  function finished() {
+    if (cur + 1 < SEGS.length) { cue(cur + 1); return; }
+    document.getElementById("cn").textContent = "That’s all nine.";
+    document.getElementById("ct").textContent = "Who gains when a problem is described by race instead of by class?";
+    document.getElementById("cs").textContent = "";
+    card.hidden = false;
+  }
+  window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player("yt", {
+      width: "100%", height: "100%",
+      host: "https://www.youtube-nocookie.com",
+      playerVars: { rel: 0, modestbranding: 1, playsinline: 1 },
+      events: { onStateChange: function (e) { if (e.data === YT.PlayerState.ENDED && cur >= 0 && card.hidden) finished(); } }
+    });
+  };
+  document.getElementById("go").addEventListener("click", function () { cue(0); });
+  document.getElementById("next").addEventListener("click", function () { cue(cur + 1); });
+  document.getElementById("prev").addEventListener("click", function () { cue(Math.max(0, cur - 1)); });
+  document.getElementById("restart").addEventListener("click", function () { if (cur >= 0) { clearTimeout(timer); card.hidden = true; play(cur); } });
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
