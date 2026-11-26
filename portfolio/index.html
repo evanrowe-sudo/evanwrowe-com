@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Course Design Portfolio | Evan W. Rowe, PhD</title>
+<meta name="description" content="Online course design work samples: a WCAG 2.1 AA course review, assignment and rubric design, a week of an asynchronous course, and the course-building tools behind them.">
+<meta property="og:title" content="Course Design Portfolio | Evan W. Rowe, PhD">
+<meta property="og:description" content="Work samples from fully asynchronous Canvas courses: accessibility review, assignments, rubrics and course-building tools.">
+<meta property="og:url" content="https://evanwrowe.com/portfolio/">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a course designer's case file. Each section is one work sample, shown the way it runs in Canvas: the report, the assignment, the rubric, the week, the tools. Same visual family as the consulting site. */
+:root {
+  --paper: #F6F7F5;
+  --panel: #FFFFFF;
+  --ink: #15212B;
+  --muted: #56636E;
+  --line: #D8DDE1;
+  --accent: #1E5C86;
+  --accent-soft: #E3EDF4;
+  --flag: #A8620B;
+  --flag-soft: #F6EAD6;
+  --err: #A3302A;
+  --err-soft: #F6E2E0;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0F151A; --panel: #161F26; --ink: #E5EAEE; --muted: #9AA7B1;
+    --line: #27323B; --accent: #78B4E0; --accent-soft: #15283A; --flag: #E6A646; --flag-soft: #2A2216;
+    --err: #EE8A82; --err-soft: #2E1A19;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0F151A; --panel: #161F26; --ink: #E5EAEE; --muted: #9AA7B1;
+  --line: #27323B; --accent: #78B4E0; --accent-soft: #15283A; --flag: #E6A646; --flag-soft: #2A2216;
+  --err: #EE8A82; --err-soft: #2E1A19;
+  color-scheme: dark;
+}
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.6; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); font-stretch: 112%; line-height: 1.12; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 3.3rem); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.45rem, 3vw, 2rem); font-weight: 750; }
+h3 { font-size: 1.1rem; font-weight: 700; font-stretch: 105%; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.label { font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.small { font-size: 0.95rem; color: var(--muted); }
+
+header.top { border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; padding-block: 18px; }
+.name { font-family: var(--display); font-weight: 800; font-stretch: 118%; font-size: 1.05rem; }
+nav { display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--display); font-size: 0.92rem; }
+nav a { color: var(--ink); text-decoration: none; }
+nav a:hover { color: var(--accent); }
+
+.hero .wrap { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: start; padding-block: 52px 44px; }
+.lede { display: grid; gap: 18px; min-width: 0; }
+.lede p.big { font-size: 1.18rem; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px 20px; border-top: 1px solid var(--line); padding-top: 16px; }
+.facts div { display: grid; gap: 2px; }
+.facts b { font-family: var(--display); font-size: 1.35rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.report { background: var(--panel); border: 1px solid var(--line); font-family: var(--mono); font-size: 0.88rem; min-width: 0; }
+.report .head { padding: 14px 16px; border-bottom: 1px solid var(--line); display: grid; gap: 4px; }
+.report .head b { font-family: var(--display); font-size: 1rem; }
+.tally { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+.tally div { padding: 12px 16px; display: grid; gap: 2px; }
+.tally div + div { border-left: 1px solid var(--line); }
+.tally span:first-child { font-family: var(--display); font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.tally .e span:first-child { color: var(--err); }
+.tally .w span:first-child { color: var(--flag); }
+.report table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.report caption { text-align: left; padding: 10px 16px 4px; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.report th, .report td { text-align: left; padding: 7px 16px; border-top: 1px solid var(--line); vertical-align: top; }
+.report th { font-weight: 500; color: var(--muted); }
+.report td.n, .report th.n { text-align: right; }
+.report .foot { padding: 10px 16px; color: var(--muted); font-size: 0.78rem; border-top: 1px solid var(--line); }
+
+section.block { border-top: 1px solid var(--line); }
+section.block > .wrap { padding-block: 52px; display: grid; gap: 26px; }
+.intro { display: grid; gap: 10px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.two > div { display: grid; gap: 12px; align-content: start; min-width: 0; }
+
+.findings { display: grid; gap: 14px; }
+.finding { background: var(--panel); border: 1px solid var(--line); display: grid; grid-template-columns: 7.5em 1fr; min-width: 0; }
+.finding .sev { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 14px 12px; display: grid; gap: 4px; align-content: start; }
+.finding.error .sev { background: var(--err-soft); color: var(--err); }
+.finding.warning .sev { background: var(--flag-soft); color: var(--flag); }
+.finding.note .sev { background: var(--accent-soft); color: var(--accent); }
+.finding .body { padding: 14px 16px; display: grid; gap: 6px; min-width: 0; }
+.finding .loc { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.finding .fix { font-size: 0.98rem; }
+.finding .fix b { font-family: var(--display); font-size: 0.85rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); margin-right: 6px; }
+
+.parts { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); background: var(--panel); }
+.part { padding: 20px 18px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.part + .part { border-left: 1px solid var(--line); }
+.part .step { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--flag); }
+.part p { font-size: 0.98rem; }
+.timeline { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 0.82rem; }
+.timeline span { border: 1px solid var(--line); background: var(--panel); padding: 6px 10px; }
+.timeline span b { font-weight: 500; color: var(--accent); margin-right: 6px; }
+.pull { border-left: 4px solid var(--accent); padding: 4px 0 4px 18px; display: grid; gap: 6px; }
+.pull q { font-size: 1.1rem; quotes: "\201C" "\201D"; }
+
+.tablebox { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); }
+table.align { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 0.95rem; }
+table.align caption { text-align: left; padding: 12px 16px 6px; font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+table.align th, table.align td { text-align: left; padding: 10px 16px; border-top: 1px solid var(--line); vertical-align: top; }
+table.align thead th { font-family: var(--display); font-size: 0.85rem; letter-spacing: 0.03em; color: var(--muted); font-weight: 700; }
+table.align td.n { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+table.align tfoot td { font-family: var(--display); font-weight: 700; }
+.scale { display: flex; flex-wrap: wrap; gap: 0; font-family: var(--mono); font-size: 0.8rem; border: 1px solid var(--line); background: var(--panel); width: fit-content; max-width: 100%; }
+.scale span { padding: 6px 12px; }
+.scale span + span { border-left: 1px solid var(--line); }
+.scale b { font-weight: 500; color: var(--accent); }
+
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border: 1px solid var(--line); background: var(--panel); }
+.day { padding: 12px 10px; display: grid; gap: 6px; align-content: start; min-height: 7.5em; min-width: 0; }
+.day + .day { border-left: 1px solid var(--line); }
+.day .d { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.chip { font-family: var(--display); font-size: 0.82rem; line-height: 1.3; padding: 6px 8px; background: var(--accent-soft); color: var(--ink); border-left: 3px solid var(--accent); }
+.chip.due { background: var(--flag-soft); border-left-color: var(--flag); }
+ul.plain { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+ul.plain li { max-width: 65ch; }
+
+.tools { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border: 1px solid var(--line); background: var(--panel); }
+.tool { padding: 20px 18px; display: grid; gap: 8px; align-content: start; min-width: 0; border-top: 1px solid var(--line); }
+.tool:nth-child(-n+2) { border-top: 0; }
+.tool:nth-child(even) { border-left: 1px solid var(--line); }
+.tool p { font-size: 0.98rem; }
+.tool .when { font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); }
+
+.pipeline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-family: var(--display); font-size: 0.92rem; }
+.pipeline span { border: 1px solid var(--line); background: var(--panel); padding: 8px 12px; }
+.pipeline i { font-style: normal; color: var(--muted); }
+
+.practice { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+.practice div { display: grid; gap: 6px; align-content: start; border-top: 2px solid var(--accent); padding-top: 12px; }
+.practice p { font-size: 0.98rem; }
+
+.contact-line { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.email { font-family: var(--mono); font-size: 1.02rem; background: var(--panel); border: 1px solid var(--line); padding: 10px 14px; user-select: all; }
+.btn { font-family: var(--display); font-weight: 700; font-size: 0.95rem; padding: 10px 16px; border: 2px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+#copied { font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+footer .wrap { padding-block: 26px; color: var(--muted); font-size: 0.9rem; display: flex; flex-wrap: wrap; gap: 8px 20px; border-top: 1px solid var(--line); }
+
+@media (max-width: 860px) {
+  .hero .wrap, .two { grid-template-columns: 1fr; }
+  .parts, .tools { grid-template-columns: 1fr; }
+  .part + .part { border-left: 0; border-top: 1px solid var(--line); }
+  .tool:nth-child(even) { border-left: 0; }
+  .tool:nth-child(2) { border-top: 1px solid var(--line); }
+  .week { grid-template-columns: 1fr; }
+  .day { min-height: 0; grid-template-columns: 4.5em 1fr; align-items: start; }
+  .day + .day { border-left: 0; border-top: 1px solid var(--line); }
+  .finding { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="name">Evan W. Rowe, Ph.D.</div>
+    <nav aria-label="Sections">
+      <a href="#review">Course review</a>
+      <a href="#assignment">Assignment design</a>
+      <a href="#rubric">Rubric alignment</a>
+      <a href="#week">A week online</a>
+      <a href="#tools">Build tools</a>
+      <a href="#video">Video</a>
+      <a href="#ai">AI practice</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="lede">
+      <span class="label">Course design portfolio</span>
+      <h1>I design online courses, and I build the tools that check them.</h1>
+      <p class="big">I have taught as instructor of record since 2004. I teach fully asynchronous courses in Canvas at Green River College, and I run Canvas course sites at three institutions. In 2026 I designed and directed a course-building and quality-check system, written with AI-assisted coding, that runs my courses every day.</p>
+      <p>Each sample below is course content as it runs in Canvas. No student work, names or grades appear on this page.</p>
+      <div class="facts">
+        <div><b>22 years</b><span class="small">teaching, in person and online</span></div>
+        <div><b>3</b><span class="small">institutions' Canvas sites built and run</span></div>
+        <div><b>WCAG 2.1 AA</b><span class="small">accessibility audit, rule-based</span></div>
+      </div>
+    </div>
+
+    <aside class="report" aria-label="Course review summary">
+      <div class="head">
+        <span class="label">Course review report · sample</span>
+        <b>JOURN 156 · Intro to Sports Media Practices</b>
+        <span>Green River College · Fall 2026 · fully online</span>
+      </div>
+      <div class="tally">
+        <div class="e"><span>5</span><span>errors</span></div>
+        <div class="w"><span>45</span><span>warnings</span></div>
+        <div><span>12</span><span>notes</span></div>
+      </div>
+      <table>
+        <caption>Findings by success criterion</caption>
+        <thead><tr><th scope="col">Criterion</th><th scope="col" class="n">Err</th><th scope="col" class="n">Warn</th><th scope="col" class="n">Note</th></tr></thead>
+        <tbody>
+          <tr><td>1.1.1 Non-text content</td><td class="n">1</td><td class="n">0</td><td class="n">0</td></tr>
+          <tr><td>1.3.1 Info and relationships</td><td class="n">4</td><td class="n">20</td><td class="n">0</td></tr>
+          <tr><td>1.4.3 Contrast (minimum)</td><td class="n">0</td><td class="n">25</td><td class="n">0</td></tr>
+          <tr><td>3.2.5 Change on request</td><td class="n">0</td><td class="n">0</td><td class="n">12</td></tr>
+        </tbody>
+      </table>
+      <div class="foot">61 items scanned from the course export file · run Nov. 23, 2026</div>
+    </aside>
+  </div>
+</section>
+
+<section class="block" id="review">
+  <div class="wrap">
+    <div class="intro">
+      <span class="label">Sample 1 · Course review</span>
+      <h2>An accessibility review of my own online course</h2>
+      <p>I ran the review on my own course before offering it to anyone else. The audit reads the course export file, the file Canvas produces under Settings, Export Course Content, which carries course content and no student records. It checks every page, assignment, quiz and the syllabus against WCAG 2.1 AA with fixed rules, so the same course produces the same list on every run.</p>
+      <p>Every finding gives the item, its location in the course, a severity and a specific fix. Severity follows what can be proved from the page code: an <b>error</b> is a failure the markup confirms, a <b>warning</b> is very likely a failure with a legitimate exception, and a <b>note</b> needs a person to look.</p>
+    </div>
+    <div class="findings">
+      <article class="finding error">
+        <div class="sev">Error<span>1.1.1</span></div>
+        <div class="body">
+          <h3>Welcome Page: image alt text is the file name</h3>
+          <div class="loc">wiki_content/welcome-page.html · alt="Full Body.jpg"</div>
+          <p>A screen reader announces "Full Body.jpg," which describes nothing.</p>
+          <p class="fix"><b>Fix</b>Write alt text that says what the photo shows and why it is on the page, or mark it decorative.</p>
+        </div>
+      </article>
+      <article class="finding error">
+        <div class="sev">Error<span>1.3.1</span></div>
+        <div class="body">
+          <h3>Syllabus: grading table has no header cells</h3>
+          <div class="loc">course_settings/syllabus.html · table "Grading Element / Weight / Description"</div>
+          <p>The header row is built from bold text in ordinary cells, so every cell is read out with no column label.</p>
+          <p class="fix"><b>Fix</b>Make the first row real header cells and add a caption that names the table.</p>
+        </div>
+      </article>
+      <article class="finding warning">
+        <div class="sev">Warning<span>1.4.3</span></div>
+        <div class="body">
+          <h3>The NFL and Television: section headings too faint</h3>
+          <div class="loc">wiki_content/the-nfl-and-television.html · color #3498db on white</div>
+          <p>Contrast ratio 3.15:1, below the 4.5:1 minimum for body-size text.</p>
+          <p class="fix"><b>Fix</b>Darken the heading color until it clears 4.5:1, then recheck the page.</p>
+        </div>
+      </article>
+      <article class="finding note">
+        <div class="sev">Note<span>3.2.5</span></div>
+        <div class="body">
+          <h3>Syllabus: a link opens a new tab without saying so</h3>
+          <div class="loc">course_settings/syllabus.html · instructor email link, target="_blank"</div>
+          <p>Markup can't settle this one. A person decides whether the new tab is needed.</p>
+          <p class="fix"><b>Fix</b>Say so in the link text, or let the link open in the same tab.</p>
+        </div>
+      </article>
+    </div>
+    <p class="small">Four of 62 findings shown. The full report lists every finding by item, with the code that triggered it.</p>
+  </div>
+</section>
+
+<section class="block" id="assignment">
+  <div class="wrap">
+    <div class="intro">
+      <span class="label">Sample 2 · Assignment design</span>
+      <h2>Insider Gambling: The Red Team</h2>
+      <p>A scenario assignment for sports media students, 250 points, taught at the University of Colorado Boulder (CMDI 2001, Fall 2026) and at Green River College (JOURN 156). Panels take the position of someone inside a sport who wants to profit from information the public does not have. They build the scheme, find where it breaks, and then switch sides and write the reporting that would catch them.</p>
+    </div>
+    <div class="parts">
+      <div class="part">
+        <span class="step">Part 1 · Build</span>
+        <h3>The scheme</h3>
+        <p>Which sports are easiest to corrupt? Who in the building knows something first, and how do they get paid without their name on it? Prop bets let someone move one player's stat line and leave the score alone. Does that count as fixing?</p>
+      </div>
+      <div class="part">
+        <span class="step">Part 2 · Break</span>
+        <h3>Where it falls apart</h3>
+        <p>The case is Alabama baseball, 2023. Suspicion started with a very large bet, placed in person, on a game nobody cared about. Students work out why monitoring is tightest where games matter least, and which workarounds still leave a trace.</p>
+      </div>
+      <div class="part">
+        <span class="step">Part 3 · Switch sides</span>
+        <h3>The reporting plan</h3>
+        <p>Now the panel is the reporter. Which records would they pull, from whom? Which sources would they work, and what would those sources risk by talking? What does the pattern look like in the betting line before anyone admits anything?</p>
+      </div>
+    </div>
+    <div class="two">
+      <div>
+        <h3>How it is scaffolded</h3>
+        <div class="timeline" aria-label="Assignment sequence">
+          <span><b>Sep 28</b>Warm-up discussion</span>
+          <span><b>Oct 5</b>Workshop</span>
+          <span><b>Oct 7</b>The Exchange</span>
+          <span><b>Oct 9</b>Written brief</span>
+        </div>
+        <p>The warm-up discussion gives three people at the same championship game, the Fixer, the Spot-Rigger and the Intel Operator. Students rank them and say exactly where the line gets crossed. The ranking becomes the vocabulary for the scheme.</p>
+        <p>The Exchange was built as a live session in which every panel holds a station at once while classmates circulate and try to knock holes in the scheme. Most panels presented by recorded video instead. The written brief carried the same three parts either way, so the assessment held.</p>
+      </div>
+      <div>
+        <h3>Design choices</h3>
+        <ul class="plain">
+          <li>The role switch carries the learning. Building the scheme makes the reporting plan concrete.</li>
+          <li>A single named case anchors an open-ended problem.</li>
+          <li>The guardrail is written into the prompt: an analytical exercise in how integrity fails and how it gets caught, with no accusations against real people beyond adjudicated cases.</li>
+          <li>The brief is the record of the work, not a separate paper.</li>
+        </ul>
+        <div class="pull">
+          <q>This is the half most groups underbuild.</q>
+          <span class="small">The assignment sheet, on Part 3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="rubric">
+  <div class="wrap">
+    <div class="intro">
+      <span class="label">Sample 3 · Rubric alignment and revision</span>
+      <h2>JOURN 101 Final Multimedia News Story: fixing the directions, not the rubric</h2>
+      <p>Two students in a fully online JOURN 101 section ran into the same confusion over how to format and submit the final project. I wrote the assignment and its rubric, so I checked the two against each other. Every rubric criterion was already covered by a stated requirement. The problem was delivery: the directions offered a live-website option that caused publishing and visibility trouble, and they never said what file to hand in.</p>
+      <p>I rewrote the directions. There is now one required format, a PDF export, with a one-line export path for each free tool students use. The live-website option is gone, and the hard-coded due date became "at the Canvas deadline." The design work and the rubric stayed the same. That version now runs every term.</p>
+    </div>
+    <div class="tablebox">
+      <table class="align">
+        <caption>Each requirement in the directions, matched to the criterion that scores it</caption>
+        <thead>
+          <tr><th scope="col">Requirement in the directions</th><th scope="col">Rubric criterion</th><th scope="col" class="n">Points</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>250–400 words of original, factual copy about a real event the student covered</td><td>Reporting &amp; Written Copy</td><td class="n">50</td></tr>
+          <tr><td>At least four original images taken at the event, in focus, each one helping tell the story; anything not the student's own is credited</td><td>Visuals &amp; Images</td><td class="n">60</td></tr>
+          <tr><td>Five strategic hashtags in the copy and two relevant accounts tagged</td><td>Use of Multimedia Conventions</td><td class="n">30</td></tr>
+          <tr><td>Professional, proofread, factual writing focused on the event</td><td>Organization &amp; Professionalism</td><td class="n">30</td></tr>
+          <tr><td>One-page reflection in four parts: why it is multimedia journalism, the reporting experience, the thought process, challenges</td><td>Reflection &amp; Analysis</td><td class="n">60</td></tr>
+          <tr><td>One cohesive post or photo-essay layout, exported to PDF</td><td>Creativity &amp; Storytelling Impact</td><td class="n">20</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2">Total</td><td class="n">250</td></tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="scale" aria-label="Rating scale">
+      <span><b>Exceeds</b> 100%</span><span><b>Mastery</b> 75%</span><span><b>Near</b> 50%</span><span><b>Below</b> 25%</span><span><b>No evidence</b> 0</span>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="week">
+  <div class="wrap">
+    <div class="intro">
+      <span class="label">Sample 4 · Asynchronous course structure</span>
+      <h2>A week in my online courses</h2>
+      <p>Most of my online students work, and many log in after a shift. I design for the student who opens the course at 11 p.m. with nobody to ask. The weekly rhythm is fixed so students can plan around jobs, and the full term calendar is posted on the first day.</p>
+    </div>
+    <div class="week" role="list" aria-label="Weekly rhythm">
+      <div class="day" role="listitem"><span class="d">Mon</span><span class="chip">Module opens: overview page lists readings, work due and deadlines</span></div>
+      <div class="day" role="listitem"><span class="d">Tue</span><span class="chip">Reading quiz, two attempts</span></div>
+      <div class="day" role="listitem"><span class="d">Wed</span><span class="chip">Reporting or production work</span></div>
+      <div class="day" role="listitem"><span class="d">Thu</span><span class="chip due">Discussion post due</span></div>
+      <div class="day" role="listitem"><span class="d">Fri</span><span class="chip">Video office hours by appointment</span></div>
+      <div class="day" role="listitem"><span class="d">Sat</span><span class="chip due">Two replies to classmates due</span></div>
+      <div class="day" role="listitem"><span class="d">Sun</span><span class="chip">Replies to students within one to two business days, all week</span></div>
+    </div>
+    <div class="two">
+      <div>
+        <h3>Discussion rubric, 25 points</h3>
+        <p>Five criteria at five points each: answering every part of the question; quality of the response and its use of course concepts; mechanics; replies that add a new idea instead of agreeing; and posting one initial response and two replies on time and at length. The lowest quiz and discussion scores drop, so one bad week does not sink a grade.</p>
+      </div>
+      <div>
+        <h3>Engagement that holds up online</h3>
+        <ul class="plain">
+          <li>Prompts ask for a position backed by a source, and replies have to build on, question or answer a classmate.</li>
+          <li>JOURN 156 opens with an introduction video and virtual team building.</li>
+          <li>Its first major project is a debate segment in the format of ESPN's Around the Horn, produced by remote teams and then peer-reviewed.</li>
+          <li>Reporting assignments send students out to real events and real interviews, so the course does not stay on the screen.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="tools">
+  <div class="wrap">
+    <div class="intro">
+      <span class="label">Sample 5 · Build and quality tools</span>
+      <h2>A course system I designed and directed</h2>
+      <p>I designed the system and decided what each tool had to do and check. The code was written with AI-assisted coding: Python against the Canvas LMS API. It has run my Canvas courses at the Colorado School of Mines, CU Boulder and Green River College since April 2026, across 347 recorded changes. Each tool exists because a course needed it.</p>
+    </div>
+    <div class="tools">
+      <div class="tool">
+        <span class="when">Build</span>
+        <h3>Course from a syllabus</h3>
+        <p>Builds a whole course shell from a syllabus and a term calendar: one module per teaching week, each with an overview page and that week's graded items, with every due date computed from the new term. Everything is created unpublished for review, and a rerun skips anything already there.</p>
+      </div>
+      <div class="tool">
+        <span class="when">Build</span>
+        <h3>Scheduler, calendar and course copy</h3>
+        <p>Sets a term's deadlines from the term dates, builds module overview pages and an accessible course calendar from live due dates, copies a course into a new term with the dates shifted, and builds Canvas rubrics.</p>
+      </div>
+      <div class="tool">
+        <span class="when">Before the term opens</span>
+        <h3>Launch checklist</h3>
+        <p>Asks whether a course is ready to open to students. It flags due dates outside the term and weighted grade groups with nothing in them. It reads only, changes nothing, and links to the tool that fixes each kind of problem.</p>
+      </div>
+      <div class="tool">
+        <span class="when">Every day, built November 2026</span>
+        <h3>Look-ahead check</h3>
+        <p>A Green River quiz asked about two videos and a scenario the course never showed. The quiz description that listed them had been lost in a course copy, and nobody knew until a student wrote in. The check now reads next week's quizzes and assignments against what the course actually shows, and it flags links to pages that do not exist.</p>
+      </div>
+      <div class="tool">
+        <span class="when">Any time</span>
+        <h3>Accessibility audit and fixer</h3>
+        <p>The rule-based WCAG 2.1 AA audit in Sample 1. It works on a live course or on an export file, and a fixer repairs headings, tables and links on assignment pages.</p>
+      </div>
+      <div class="tool">
+        <span class="when">Audit of the tool itself</span>
+        <h3>Checking the checker</h3>
+        <p>I audit the software the way I audit a course. A June 2026 review found that deadlines set in UTC were closing Green River assignments at 4:59 p.m. Pacific. The scheduler now works in each course's local time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="video">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <span class="label">Sample 6 · Multimedia</span>
+        <h2>Live class recordings into captioned teaching video</h2>
+        <p>I produced audio for twenty years and have released albums of my own. In November 2026 I built a pipeline that turns a class recorded on a phone into a finished, captioned video matched to the slides, with the clips shown in the room. Captions also count toward accessibility.</p>
+      </div>
+      <div>
+        <div class="pipeline" aria-label="Video pipeline">
+          <span>Phone or Zoom recording</span><i>→</i><span>Word-level transcript</span><i>→</i><span>Cuts on exact words</span><i>→</i><span>Slides and clips matched</span><i>→</i><span>Burned-in captions</span>
+        </div>
+        <ul class="plain">
+          <li>Cuts land on word boundaries, never on rough timestamps, and every seam is reviewed before export.</li>
+          <li>Each clip starts at its setup question, so a viewer always has the context.</li>
+          <li>Student voices are never included. Student answers appear as on-screen cards marked as paraphrase.</li>
+          <li>Every segment is labeled on screen with course, school, date and section.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="ai">
+  <div class="wrap">
+    <div class="intro">
+      <span class="label">How I use AI in design work</span>
+      <h2>AI drafts, and I own what reaches a learner</h2>
+    </div>
+    <div class="practice">
+      <div>
+        <h3>A structured workflow</h3>
+        <p>I use Claude every day, including Claude Code, and I write Claude skills: packaged, reusable instructions for tasks I repeat. AI handles source analysis, drafting, format conversion and first-pass checks. I set the objective, the constraints and the examples.</p>
+      </div>
+      <div>
+        <h3>Checked before it ships</h3>
+        <p>Every AI draft gets read against the learning objective and the source before a student sees it. Quotation marks go only around words found in the source, and every figure says what it counts.</p>
+      </div>
+      <div>
+        <h3>Fixed rules where consistency matters</h3>
+        <p>A model's opinion changes from run to run, and a compliance check can't. That is why the accessibility audit runs on fixed rules. AI is used where judgment helps and kept out where a repeatable answer is the point.</p>
+      </div>
+      <div>
+        <h3>Ask first, then rule</h3>
+        <p>My syllabi carry no fixed AI policy. Students ask before they use a tool, I rule on it, and the rulings build into precedent over the term. A policy written in August is out of date by October.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="contact">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <span class="label">Background</span>
+        <h2>Evan W. Rowe, Ph.D.</h2>
+        <p>Ph.D. in Media Research and Practice, University of Colorado Boulder (2022). M.A., The New School for Social Research. Instructor of record at Green River College (fully online), the Colorado School of Mines and CU Boulder, after a decade at Broward College and Miami Dade College. I taught First-Year Writing and Rhetoric during the doctorate, including the 2020 remote terms. Former investigative reporter.</p>
+      </div>
+      <div>
+        <span class="label">Contact</span>
+        <p>A résumé, the full course review report and references are available on request.</p>
+        <div class="contact-line">
+          <span class="email" id="email">evanrowe@gmail.com</span>
+          <button class="btn" id="copy" type="button">Copy email</button>
+          <span id="copied" aria-live="polite"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Evan W. Rowe · course design portfolio</span>
+    <span>Samples current as of November 2026</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById("copy").addEventListener("click", function () {
+  var out = document.getElementById("copied");
+  var text = document.getElementById("email").textContent.trim();
+  function selectIt() {
+    var r = document.createRange(); r.selectNodeContents(document.getElementById("email"));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    out.textContent = "Selected. Press Ctrl+C to copy.";
+  }
+  try {
+    navigator.clipboard.writeText(text).then(function () { out.textContent = "Copied."; }, selectIt);
+  } catch (e) { selectIt(); }
+});
+</script>
+
+</body>
+</html>
